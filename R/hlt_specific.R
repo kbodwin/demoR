@@ -5,7 +5,7 @@ hlt_specific <- function(code_string, hltcolor = "red", specs) {
 
   ## code_string must contain only code; no placeholders or other html
 
-  hlt_pieces <- sapply(specs, function(x) paste0("<font color='", hltcolor, "'>", x, "</font>"), USE.NAMES = FALSE)
+  hlt_pieces <- unlist(map2(specs, hltcolor,  function(x, y) paste0("<font color='", y, "'>", x, "</font>")))
 
   print_string <- reduce2(c(code_string, specs), hlt_pieces, str_replace)
 
