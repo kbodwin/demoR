@@ -74,27 +74,7 @@ if(file.exists("Lab_Exercise_CatVars2.html")){
   file.remove("Lab_Exercise_CatVars2.html")
 }
 
-bridge <- function(code_string, user_inputs = list()){
-
-
-  sym_inputs <- sub_syms(names(user_inputs))
-  names(sym_inputs) <- names(user_inputs)
-
-  code_string <- glue_data(sym_inputs, code_string)
-
-  my_expr <- eval(parse(text = paste0("rlang::expr(",code_string,")")))
-
-  my_expr
-}
-
-
-sub_syms <- function(my_list){
-
-  lapply(my_list, function(x) paste0("(!!sym(user_inputs[['", x, "']]))"))
-
-}
-
-
+sapply(list.files("../R/", full.names = TRUE), source)
 
 require(learnr)
 require(ggplot2)
@@ -108,7 +88,7 @@ require(glue)
 knitr::opts_chunk$set(echo = FALSE)
 
 
-source("https://raw.githubusercontent.com/kbodwin/ShinyLabs/master/Scripts/makeStrings.R")
+#source("https://raw.githubusercontent.com/kbodwin/ShinyLabs/master/Scripts/makeStrings.R")
 
 correct <- "<font color='red'>Correct!<\u002ffont><br><br>"
 incorrect <- "<font color='red'>Not quite right...<\u002ffont><br><br>"
@@ -145,8 +125,8 @@ br_1 <- reactive(
   )
 )
 
-output$code_4_1 <- renderText(expr_name(br_1()))
-output$plot_4_1 <- renderPlot(eval(br_1()))
+output$code_4_1 <- renderText(expr_name(br_1()$string))
+output$plot_4_1 <- renderPlot(eval(br_1()$expr))
 
 </script>
  <!--html_preserve-->
