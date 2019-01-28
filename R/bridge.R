@@ -1,5 +1,8 @@
 bridge <- function(code_string, user_inputs = list()){
 
+  col_inputs <- txt_color(user_inputs, "red")
+  names(col_inputs) <- names(user_inputs)
+  my_string <- glue_data(as.list(col_inputs), code_string) %>% txt_tocode()
 
   sym_inputs <- sub_syms(names(user_inputs))
   names(sym_inputs) <- names(user_inputs)
@@ -8,7 +11,7 @@ bridge <- function(code_string, user_inputs = list()){
 
   my_expr <- eval(parse(text = paste0("rlang::expr(",code_string,")")))
 
-  my_expr
+  return(list(expr = my_expr, string = my_string))
 }
 
 

@@ -13,7 +13,7 @@ if(file.exists("Lab_Exercise_CatVars2.html")){
   file.remove("Lab_Exercise_CatVars2.html")
 }
 
-sapply(list.files("./R/", full.names = TRUE), source)
+sapply(list.files("../R/", full.names = TRUE), source)
 
 require(learnr)
 require(ggplot2)
@@ -27,7 +27,7 @@ require(glue)
 knitr::opts_chunk$set(echo = FALSE)
 
 
-source("https://raw.githubusercontent.com/kbodwin/ShinyLabs/master/Scripts/makeStrings.R")
+#source("https://raw.githubusercontent.com/kbodwin/ShinyLabs/master/Scripts/makeStrings.R")
 
 correct <- "<font color='red'>Correct!</font><br><br>"
 incorrect <- "<font color='red'>Not quite right...</font><br><br>"
@@ -85,7 +85,7 @@ br_1 <- reactive(
   )
 )
 
-output$code_4_1 <- renderText(expr_name(br_1()))
-output$plot_4_1 <- renderPlot(eval(br_1()))
+output$code_4_1 <- renderText(expr_name(br_1()$string))
+output$plot_4_1 <- renderPlot(eval(br_1()$expr))
 
 ```
