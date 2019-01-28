@@ -1,36 +1,32 @@
-hlt_specific <- function(code_string, hltcolor = "red", specs) {
+hlt_specific <- function(code_string, specs, hltcolor = "red") {
   ## Returns string of code_string with all (occurrences of) specs colored in hltcolor
 
   ## code_string must contain only code; no placeholders or other html
 
-  #hlt_pieces <- unlist(map2(specs, hltcolor, txt_color))
   hlt_pieces <- txt_color(specs, hltcolor)
 
   print_string <- reduce2(c(code_string, specs), hlt_pieces, str_replace)
 
-  paste("<pre class='r'><code>", print_string, "</code></pre>")
+  txt_tocode(print_string)
 }
 
 
-hlt_args <- function(code_string, hltcolor = "red") {
+hlt_args <- function(code_string, ...) {
   ## Returns string of code_string with all argument names colored in hltcolor
 
   ## code_string must contain only code; no placeholders or other html
 
   strpieces <- strsplit(code_string, split = "=")[[1]]
-  funs <- unlist(strsplit(strpieces[1:length(strpieces)], split = "\\(|, "))
-  funs <- trimws(funs[grepl(" $", funs)])
+  args <- unlist(strsplit(strpieces[1:length(strpieces)], split = "\\(|, "))
+  args <- trimws(funs[grepl(" $", args)])
   ## argument names should always immediately follow an open parentheses or comma space,
   ## and immediately preceed a space equals
 
-  hlt_pieces <- sapply(funs, function(x) paste0("<font color='", hltcolor, "'>", x, "</font>"), USE.NAMES = FALSE)
+  hlt_specific(code_string, args, ...)
 
-  print_string <- reduce2(c(code_string, funs), hlt_pieces, str_replace)
-
-  paste("<pre class='r'><code>", print_string, "</code></pre>")
 }
 
-hlt_funs <- function(code_string, hltcolor = "red") {
+hlt_funs <- function(code_string, ...) {
   ## Returns string of code_string with all functions colored in hltcolor
 
   ## code_string must contain only code; no placeholders or other html
@@ -39,28 +35,21 @@ hlt_funs <- function(code_string, hltcolor = "red") {
   funs <- sapply(strsplit(strpieces[1:(length(strpieces)-1)], split = " "), function(x) x[length(x)])
   ## function names should always immediately preceed an open parentheses
 
-  hlt_pieces <- sapply(funs, function(x) paste0("<font color='", hltcolor, "'>", x, "</font>"), USE.NAMES = FALSE)
+  hlt_specific(code_string, funs, ...)
 
-  print_string <- reduce2(c(code_string, funs), hlt_pieces, str_replace)
-
-  paste("<pre class='r'><code>", print_string, "</code></pre>")
 }
 
-hlt_vars <- function(code_string, hltcolor = "red") {
+hlt_vars <- function(code_string, ...) {
   ## Returns string of code_string with all variable inputs colored in hltcolor
 
   ## code_string must contain only code; no placeholders or other html
 
   strpieces <- strsplit(code_string, split = "=")[[1]]
-  funs <- unlist(strsplit(strpieces[1:length(strpieces)], split = "\\)|, "))
-  funs <- funs[grepl("^ ", funs)]
-  funs <- trimws(funs[!grepl("[[:punct:]]", funs)])
+  vars <- unlist(strsplit(strpieces[1:length(strpieces)], split = "\\)|, "))
+  vars <- funs[grepl("^ ", vars)]
+  vars <- trimws(funs[!grepl("[[:punct:]]", vars)])
   ## variable names should always immediately preceed a closed parentheses or comma,
   ## and immediately follow a space
 
-  hlt_pieces <- sapply(funs, function(x) paste0("<font color='", hltcolor, "'>", x, "</font>"), USE.NAMES = FALSE)
-
-  print_string <- reduce2(c(code_string, funs), hlt_pieces, str_replace)
-
-  paste("<pre class='r'><code>", print_string, "</code></pre>")
+  hlt_specific(code_string, vars, ...)
 }
