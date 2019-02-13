@@ -50,7 +50,7 @@ bridge <- function(code_string, user_inputs = list()){
 
 sub_syms <- function(my_list){
 
-  paste0("(!!sym(user_inputs[['", x, "']]))")
+  paste0("(!!sym(user_inputs[['", my_list, "']]))")
 
 }
 

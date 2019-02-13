@@ -3,6 +3,15 @@ hlt_specific <- function(code_string, specs, hltcolor = "red") {
 
   ## code_string must contain only code; no placeholders or other html
 
+  if (length(hltcolor) == 1) {
+    hltcolor <- rep(hltcolor, times = length(specs))
+  } else if (length(hltcolor) >= length(specs)) {
+    hltcolor <- hltcolor[1:length(specs)]
+  } else {
+    inds <- (1:length(specs)) %% length(specs)
+    hltcolor <- hltcolor[ifelse(inds == 0, 1, inds)]
+  }
+
   hlt_pieces <- txt_color(specs, hltcolor)
 
   print_string <- reduce2(c(code_string, specs), hlt_pieces, str_replace)
@@ -18,7 +27,7 @@ hlt_args <- function(code_string, ...) {
 
   strpieces <- strsplit(code_string, split = "=")[[1]]
   args <- unlist(strsplit(strpieces[1:length(strpieces)], split = "\\(|, "))
-  args <- trimws(funs[grepl(" $", args)])
+  args <- trimws(args[grepl(" $", args)])
   ## argument names should always immediately follow an open parentheses or comma space,
   ## and immediately preceed a space equals
 
@@ -46,8 +55,8 @@ hlt_vars <- function(code_string, ...) {
 
   strpieces <- strsplit(code_string, split = "=")[[1]]
   vars <- unlist(strsplit(strpieces[1:length(strpieces)], split = "\\)|, "))
-  vars <- funs[grepl("^ ", vars)]
-  vars <- trimws(funs[!grepl("[[:punct:]]", vars)])
+  vars <- vars[grepl("^ ", vars)]
+  vars <- trimws(vars[!grepl("[^0-9A-Za-z. ]", vars)])
   ## variable names should always immediately preceed a closed parentheses or comma,
   ## and immediately follow a space
 

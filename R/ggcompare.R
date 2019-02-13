@@ -1,5 +1,5 @@
 library(tidyverse)
-library(patchwork)
+# library(patchwork)
 
 ggcompare <- function(code_string, aes_option) {
   ## Plots two ggplots side-by-side
