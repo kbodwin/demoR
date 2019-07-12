@@ -42,3 +42,6 @@ sub_print <- function(my_list, ...){
 my_list <- list(dataset = "dat", variable = "var")
 
 glue_data(sub_syms(my_list), my_string)
+
+
+

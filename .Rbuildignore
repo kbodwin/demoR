@@ -1,2 +1,5 @@
 ^demoR\.Rproj$
 ^\.Rproj\.user$
+^dev
+^old_R
+^LICENSE\.md$

@@ -1,12 +1,28 @@
 Package: demoR
-Title: What the Package Does (One Line, Title Case)
+Title: Tools for presenting and teaching R code.
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com")
+   c(person(given = "Kelly", 
+            family = "Bodwin", 
+            role = c("aut", "cre"),
+            email = "kelly@bodwin.us"),
+    person(given = "Hunter", 
+          family = "Glanz", 
+          role = c("aut"))
+    )
 Description: What the package does (one paragraph).
-License: What license it uses
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Suggests: 
+    rmarkdown,
+    learnr,
+    shiny,
+    testthat (>= 2.1.0)
+Imports:
+    glue,
+    magrittr,
+    stringr,
+    knitr
+VignetteBuilder: knitr
+RoxygenNote: 6.1.1

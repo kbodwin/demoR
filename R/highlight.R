@@ -1,64 +1,84 @@
-hlt_specific <- function(code_string, specs, hltcolor = "red") {
-  ## Returns string of code_string with all (occurrences of) specs colored in hltcolor
+#' Highlights parts of a string
+#'
+#' \code{hlt_*} returns an string of R code with formatting wrappers (currently only html)
+#'
+#' @param .string A string object
+#' @param pattern A regular expression to match
+#' @param code Should this string be displayed in R code format?
+#' @param hlt_color Color to highlight code with.  Defaults to
+#' @param ... Formatting options, passed to \code{\link{txt_style}}
+#'
+#' @importFrom stringr str_replace_all fixed
 
-  ## code_string must contain only code; no placeholders or other html
+hlt_regexp <- function(.string, pattern, code = TRUE, ...)  {
+  UseMethod("hlt_regexp")
+}
 
-  if (length(hltcolor) == 1) {
-    hltcolor <- rep(hltcolor, times = length(specs))
-  } else if (length(hltcolor) >= length(specs)) {
-    hltcolor <- hltcolor[1:length(specs)]
+
+hlt_regexp.demo_code = function(x, ...) {
+
+  print_string <- attr(x, "print_string")
+  attr(x, "print_string") <- hlt_regexp(print_string, ...)
+
+  return(enexpr(x))
+
+}
+
+
+hlt_regexp.default <- function(.string, pattern, code = TRUE, ...) {
+  ## Matches regular expression of pattern inside of code string
+  ## Use fixed() to match exact string
+
+  if (length(list(...)) == 0) {
+    .string <- .string %>% str_replace_all(pattern, txt_background)
   } else {
-    inds <- (1:length(specs)) %% length(specs)
-    hltcolor <- hltcolor[ifelse(inds == 0, 1, inds)]
+    .string <- .string %>% str_replace_all(pattern, function(x) txt_style(x, ...))
   }
 
-  hlt_pieces <- txt_color(specs, hltcolor)
+  # Make code style
+  if (code) {
+    .string <- txt_tocode(.string)
+  }
 
-  print_string <- reduce2(c(code_string, specs), hlt_pieces, str_replace)
-
-  txt_tocode(print_string)
+  return(.string)
 }
 
 
-hlt_args <- function(code_string, ...) {
-  ## Returns string of code_string with all argument names colored in hltcolor
+hlt_args <- function(.string, ...) {
 
-  ## code_string must contain only code; no placeholders or other html
+  ## argument names should always immediately follow an open parentheses or comma space, and immediately preceed a space equals
+  # allows alphanumerics, _, and . in value name
+  # Preceeded by:
+  # Succeeded by: closed paren or comma
+  arg_regexp <- "(?<=(\\(|, ?))([:alnum:]|_|\\.)+(?= ?\\=)"
 
-  strpieces <- strsplit(code_string, split = "=")[[1]]
-  args <- unlist(strsplit(strpieces[1:length(strpieces)], split = "\\(|, "))
-  args <- trimws(args[grepl(" $", args)])
-  ## argument names should always immediately follow an open parentheses or comma space,
-  ## and immediately preceed a space equals
-
-  hlt_specific(code_string, args, ...)
+  hlt_regexp(.string, arg_regexp, ...)
 
 }
 
-hlt_funs <- function(code_string, ...) {
-  ## Returns string of code_string with all functions colored in hltcolor
+hlt_funs <- function(.string, ...) {
 
-  ## code_string must contain only code; no placeholders or other html
+  # allows alphanumerics, _, and . in value name
+  # Succeeded by: open paren
+  funs_regexp <- "([:alnum:]|_|\\.)+(?=\\()"
 
-  strpieces <- strsplit(code_string, split = "\\(")[[1]]
-  funs <- sapply(strsplit(strpieces[1:(length(strpieces)-1)], split = " "), function(x) x[length(x)])
-  ## function names should always immediately preceed an open parentheses
-
-  hlt_specific(code_string, funs, ...)
+  hlt_regexp(.string, funs_regexp, ...)
 
 }
 
-hlt_vars <- function(code_string, ...) {
-  ## Returns string of code_string with all variable inputs colored in hltcolor
+hlt_input_vals <- function(.string, ...) {
 
-  ## code_string must contain only code; no placeholders or other html
+  # allows anything but a comma or close paren or equals or leading/trailing spaces
+  # Preceeded by: equals and possibly space
+  # Succeeded by: closed paren or comma
+  ## OR
+  # Preceeded by: open paren
+  # Succeeded by: NOT an equals sign
 
-  strpieces <- strsplit(code_string, split = "=")[[1]]
-  vars <- unlist(strsplit(strpieces[1:length(strpieces)], split = "\\)|, "))
-  vars <- vars[grepl("^ ", vars)]
-  vars <- trimws(vars[!grepl("[^0-9A-Za-z. ]", vars)])
-  ## variable names should always immediately preceed a closed parentheses or comma,
-  ## and immediately follow a space
+  vars_regexp1 <- "(?<=\\= ?)[^,\\)\\= ][^,\\)\\=]*[^,\\)\\= ]*(?=(\\)|,))"
+  vars_regexp2 <- "(?<=\\()[^,\\)\\= ][^,\\)\\=]*[^,\\)\\= ]*(?! ?\\=)"
 
-  hlt_specific(code_string, vars, ...)
+  .string %>%
+    hlt_regexp(vars_regexp1, ...) %>%
+    hlt_regexp(vars_regexp2, ...)
 }

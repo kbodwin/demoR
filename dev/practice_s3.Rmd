@@ -1,0 +1,39 @@
+---
+title: "Untitled"
+author: "Kelly Bodwin"
+date: "July 11, 2019"
+output: html_document
+---
+
+```{r}
+library(rlang)
+
+hlt_red <- function(string){
+  
+  str <- paste0("<font color = 'red'>", string, "</font>")
+  
+  return(structure(str, class = "hlt_str"))
+  
+}
+
+library(knitr)
+
+# define a method for objects of the class data.frame
+knit_print.hlt_str = function(x, ...) {
+  asis_output(x)
+}
+
+# register the method
+registerS3method("knit_print", "hlt_str", knit_print.hlt_str)
+
+bob <- hlt_red("bob")
+
+bob
+```
+
+```{r}
+joe <- expr(mean(1:10))
+
+eval(joe)
+```
+
