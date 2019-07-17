@@ -16,3 +16,16 @@ test_that("hlt_regexp works with dots", {
 
   expect_equal(hlt_regexp(test_str, test_regexp, code = FALSE, color = "red", size = "30px"), good_str)
 })
+
+
+test_that("hlt_regexp works for demo code", {
+
+  good_str = "<pre class='r'><code>ggplot(iris, aes(x = <span style='color:red;font-size:30px'>Sepal.Length</span>)) + geom_histogram()</code></pre>"
+
+  test_dc <- demo_code(ggplot(iris, aes(x = Sepal.Length)) + geom_histogram())
+
+  test_result <- hlt_regexp(test_dc, test_regexp, code = FALSE, color = "red", size = "30px")
+
+  expect_equal(attr(test_result, "print_string"), good_str)
+  expect_equal(class(test_result), "demo_code")
+})

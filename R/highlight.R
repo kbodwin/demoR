@@ -8,19 +8,19 @@
 #' @param hlt_color Color to highlight code with.  Defaults to
 #' @param ... Formatting options, passed to \code{\link{txt_style}}
 #'
-#' @importFrom stringr str_replace_all fixed
-
+#' @import stringr
+# #
 hlt_regexp <- function(.string, pattern, code = TRUE, ...)  {
   UseMethod("hlt_regexp")
 }
-
-
+#
+#
 hlt_regexp.demo_code = function(x, ...) {
 
-  print_string <- attr(x, "print_string")
-  attr(x, "print_string") <- hlt_regexp(print_string, ...)
+  code_string <- attr(x, "print_string")
+  attr(x, "print_string") <- hlt_regexp(code_string, ...)
 
-  return(enexpr(x))
+  return(x)
 
 }
 
@@ -29,15 +29,31 @@ hlt_regexp.default <- function(.string, pattern, code = TRUE, ...) {
   ## Matches regular expression of pattern inside of code string
   ## Use fixed() to match exact string
 
+  # We don't want to highlight existing tags
+
+  split_string <- .string %>% str_extract_all("(\\<[^\\<\\>]*\\>)|((?<=\\>|^)[^\\<]*(?=\\<|$))") %>% unlist()
+
+  which_tags <- split_string %>% str_detect(fixed("<")) %>% unlist()
+
+  .string <- purrr::map_if(split_string, !which_tags, function(x) hlt_quick(x, pattern, ...)) %>%
+    unlist() %>%
+    str_c(collapse = "")
+
+  # wrap in code tags if needed
+  if (code && !str_detect(.string, fixed("<pre class='r'><code>"))) {
+    .string <- txt_tocode(.string)
+  }
+
+  return(.string)
+}
+
+
+hlt_quick <- function(.string, pattern, ...){
+
   if (length(list(...)) == 0) {
     .string <- .string %>% str_replace_all(pattern, txt_background)
   } else {
     .string <- .string %>% str_replace_all(pattern, function(x) txt_style(x, ...))
-  }
-
-  # Make code style
-  if (code) {
-    .string <- txt_tocode(.string)
   }
 
   return(.string)
