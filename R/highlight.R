@@ -30,10 +30,21 @@ hlt_regexp.default <- function(.string, pattern, code = TRUE, ...) {
   ## Use fixed() to match exact string
 
   # We don't want to highlight existing tags
+  ## extract html tag sequences, <*>
+  ## extract things between html >*<
 
-  split_string <- .string %>% str_extract_all("(\\<[^\\<\\>]*\\>)|((?<=\\>|^)[^\\<]*(?=\\<|$))") %>% unlist()
+  # rx_tags <- "(\\<[^\\<\\>]*\\>)"
+  # rx_between <- "((?<=\\>|^)([^\\<]|(\\<(?=(\\-|\\<))))*(?=\\<|$))"
 
-  which_tags <- split_string %>% str_detect(fixed("<")) %>% unlist()
+  split_string <- .string %>%
+    str_extract_all("(\\<[^\\<\\>]*\\>)|((?<=\\>|^)([^\\<]|(\\<(?=(\\-|\\<))))*(?=\\<|$))") %>%
+    unlist()
+
+  # < (not a bracket) >
+  # OR
+  # (start of string or >) then (no < unless part of <- or <-- assignments) then (end of string or <)
+
+  which_tags <- split_string %>% str_detect("\\<[^\\-]") %>% unlist()
 
   .string <- purrr::map_if(split_string, !which_tags, function(x) hlt_quick(x, pattern, ...)) %>%
     unlist() %>%

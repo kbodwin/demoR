@@ -60,9 +60,15 @@ source("../R/utils-wrap.R")
 # # define a method for objects of the class demo_code
 knit_print.demo_code <- function(x, ...) {
   
-  my_output <- knitr:::wrap(evaluate::evaluate(x)[[2]], ...)
-
-  asis_output(paste(attr(x, "print_string"), my_output))
+  if (length(x) > 1) {
+    
+    asis_output(paste(attr(x, "print_string"), knitr:::wrap(x[[2]], ...)))
+    
+  } else {
+    
+    asis_output(attr(x, "print_string"))
+    
+  }
 
 }
 
@@ -92,10 +98,14 @@ registerS3method("knit_print", "demo_code", knit_print.demo_code)
 #registerS3method("hlt_regexp", "demo_code", hlt_regexp.demo_code)
 #registerS3method("hilight", "demo_code", hilight.demo_code)
 
+```
+
+
+```{r}
 
 
 
-bob <- demo_code({
+demo_code({
   ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) + geom_point()
 }) %>%
   hlt_args() %>%
@@ -103,13 +113,14 @@ bob <- demo_code({
   hlt_input_vals(color = "red", italics = TRUE) %>%
   hlt_regexp("Sepal.Length", color = "green")
 
-bob
 
 ```
 
 ```{r, demo = TRUE}
 
-demo_code(mean(1:10)) %>% hlt_input_vals()
+demo_code(foo <- mean(1:10)) %>% hlt_input_vals()
+
+foo + 5
 ```
 
 

@@ -1,9 +1,20 @@
 ## an object of type demo_code is a language object that has a print_string attribute
 
 
-demo_code <- function(.code) {
+demo_code <- function(.code, eval_here = TRUE) {
 
   code_expr <- rlang::enexpr(.code)
+
+
+  if (eval_here) {
+
+    code_expr %>%
+      deparse() %>%
+      str_replace("(?!=\\<)\\<\\-", "<<-") %>%
+      parse(text = .) %>%
+      eval()
+
+  }
 
   print_string <- code_expr %>%
     deparse() %>%
