@@ -11,14 +11,13 @@ demo_code <- function(.code) {
     str_replace_all("(^\\{\\s*)|(\\}$)", "") %>%
     txt_tocode()
 
-  attr(code_expr, "class") <- "demo_code"
-  attr(code_expr, "print_string") <- print_string
+  new_demo_code <- evaluate::evaluate(code_expr)
 
-  # send the expression to a global variable, to be found by the hook
+  attr(new_demo_code, "class") <- "demo_code"
+  attr(new_demo_code, "print_string") <- print_string
+  attr(new_demo_code, "expression") <- code_expr
 
-  current_demo_object <<- code_expr
-
-  return(code_expr)
+  return(new_demo_code)
 
 }
 
