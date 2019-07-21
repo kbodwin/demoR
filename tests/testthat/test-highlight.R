@@ -20,7 +20,7 @@ test_that("hlt_regexp works with dots", {
 
 test_that("hlt_regexp works for demo code", {
 
-  good_str = "<pre class='r'><code>ggplot(iris, aes(x = <span style='color:red;font-size:30px'>Sepal.Length</span>)) + geom_histogram()</code></pre>"
+  good_str = "<pre class='prettyprint'><code>ggplot(iris, aes(x = <span style='color:red;font-size:30px'>Sepal.Length</span>)) + geom_histogram()</code></pre>"
 
   test_dc <- demo_code(ggplot(iris, aes(x = Sepal.Length)) + geom_histogram(), eval_here = FALSE)
 

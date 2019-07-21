@@ -99,6 +99,6 @@ txt_ul <- function(x) {
 
 txt_tocode <- function(x){
 
-  paste0("<pre class='r'><code>", x, "</code></pre>")
+  paste0("<pre class='prettyprint'><code>", x, "</code></pre>")
 
 }
