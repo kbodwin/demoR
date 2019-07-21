@@ -35,11 +35,11 @@ txt_style <- function(x, type = "html",
 
     # check for bold, italics, underline
 
-    if (bold) { my_opts <- c(my_opts, "text-weight" = "bold") }
+    if (bold) { my_opts <- c(my_opts, "bold" = "text-weight") }
 
-    if (italics) { my_opts <- c(my_opts, "text-style" = "italics") }
+    if (italics) { my_opts <- c(my_opts, "italics" = "text-style") }
 
-    if (underline) { my_opts <- c(my_opts, "text-decoration" = "underline") }
+    if (underline) { my_opts <- c(my_opts, "underline" = "text-decoration") }
 
 
     # put all options into <span>
