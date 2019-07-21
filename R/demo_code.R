@@ -1,6 +1,6 @@
 ## an object of type demo_code is a language object that has a print_string attribute
 
-
+#' @export
 demo_code <- function(.code, eval_here = TRUE) {
 
   code_expr <- rlang::enexpr(.code)
@@ -32,20 +32,30 @@ demo_code <- function(.code, eval_here = TRUE) {
 
 }
 
+
+#' @export
 knit_print.demo_code <- function(x, ...) {
 
   if (length(x) > 1) {
 
-    asis_output(paste(attr(x, "print_string"), knitr:::wrap(x[[2]], ...)))
+    knitr::asis_output(paste(attr(x, "print_string"), knitr:::wrap(x[[2]], ...)))
 
   } else {
 
-    asis_output(attr(x, "print_string"))
+    knitr::asis_output(attr(x, "print_string"))
 
   }
 
 }
 
+
+print.demo_code <- function(x, ...) {
+
+  attr(x, "expression") %>%
+    eval() %>%
+    print()
+
+}
 
 
 
