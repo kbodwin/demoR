@@ -10,11 +10,13 @@
 #'
 #' @import stringr
 # #
+
+#' @export
 hlt_regexp <- function(.string, pattern, code = TRUE, ...)  {
   UseMethod("hlt_regexp")
 }
-#
-#
+
+#' @export
 hlt_regexp.demo_code = function(x, ...) {
 
   code_string <- attr(x, "print_string")
@@ -24,7 +26,7 @@ hlt_regexp.demo_code = function(x, ...) {
 
 }
 
-
+#' @export
 hlt_regexp.default <- function(.string, pattern, code = TRUE, ...) {
   ## Matches regular expression of pattern inside of code string
   ## Use fixed() to match exact string
@@ -58,7 +60,7 @@ hlt_regexp.default <- function(.string, pattern, code = TRUE, ...) {
   return(.string)
 }
 
-
+#' @export
 hlt_quick <- function(.string, pattern, ...){
 
   if (length(list(...)) == 0) {
@@ -70,7 +72,7 @@ hlt_quick <- function(.string, pattern, ...){
   return(.string)
 }
 
-
+#' @export
 hlt_args <- function(.string, ...) {
 
   ## argument names should always immediately follow an open parentheses or comma space, and immediately preceed a space equals
@@ -83,6 +85,7 @@ hlt_args <- function(.string, ...) {
 
 }
 
+#' @export
 hlt_funs <- function(.string, ...) {
 
   # allows alphanumerics, _, and . in value name
@@ -93,6 +96,7 @@ hlt_funs <- function(.string, ...) {
 
 }
 
+#' @export
 hlt_input_vals <- function(.string, ...) {
 
   # allows anything but a comma or close paren or equals or leading/trailing spaces
@@ -108,4 +112,13 @@ hlt_input_vals <- function(.string, ...) {
   .string %>%
     hlt_regexp(vars_regexp1, ...) %>%
     hlt_regexp(vars_regexp2, ...)
+}
+
+
+#' @export
+
+hlt_diff <- function(.string1, .string2, ...) {
+
+  ## need a function for string differences
+
 }

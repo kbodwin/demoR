@@ -23,6 +23,7 @@ Imports:
     glue,
     magrittr,
     stringr,
-    knitr
+    knitr,
+    ggplot2
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
