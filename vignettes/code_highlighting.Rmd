@@ -1,0 +1,64 @@
+---
+title: "Code Highlighting with demoR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{code_highlighting}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+# knitr::opts_chunk$set(
+#   collapse = TRUE,
+#   comment = "#>"
+# )
+```
+
+```{r setup}
+library(demoR)
+library(ggplot2)
+```
+
+What your code chunk looks like:
+
+```{r, eval = FALSE}
+demo_code({
+  ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+    geom_point()
+}) %>%
+  hlt_args(color = "green") %>%
+  hlt_funs(color = "blue") %>%
+  hlt_input_vals(color = "red") %>%
+  hlt_regexp("Sepal.Length")
+```
+
+What the output looks like:
+
+```{r, echo = FALSE, fig.width = 7, fig.height = 5}
+demo_code({
+  ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+    geom_point()
+}) %>%
+  hlt_args(color = "green") %>%
+  hlt_funs(color = "blue") %>%
+  hlt_input_vals(color = "red") %>%
+  hlt_regexp("Sepal.Length")
+```
+
+
+demoR code acts as if the wrappers and highlights were never there.  Thus, you can define objects, etc. within demo_code wraps and use them later:
+
+
+```{r, echo = FALSE}
+
+demo_code(foo <- mean(1:10)) %>% hlt_input_vals()
+
+demo_code(foo)
+
+```
+
+```{r}
+
+foo + 5
+```
+
