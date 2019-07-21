@@ -7,112 +7,17 @@ output: html_document
 
 ```{r, include = FALSE, message = FALSE}
 
-library(purrr)
-library(rlang)
-library(knitr)
+library(demoR)
+library(ggplot2)
 
-retrieve_demos <- function(envir) {
+#source("../R/highlight.R")
 
-  my_demos <- map(ls(envir), function(x) if (class(env_get(envir, x)) == "demo_code") return(x) ) %>% unlist()
-
-  return(my_demos)
-}
-
-# 
-# knitr::knit_hooks$set(
-#   demo = function(before, options, envir) {
-#     
-#     if (!before) {
-#       
-#       #my_demos <- retrieve_demos(envir)
-#       #map(to_evaluate, ~knit_print(eval(.x)))
-#       #print(ls(envir))
-#       thing <- rlang::env_get(envir, "current_demo_object")
-#       
-#       if (!is.null(thing)) {
-#         
-#         thing_evaled <- evaluate::evaluate(thing)
-#         
-#         if (class(thing_evaled[[2]]) == "recordedplot"
-#       
-#       return()
-#       #return()
-#       
-#     }
-# 
-#   }
-# )
-```
-
-
-
-```{r, include = FALSE}
-library(tidyverse)
-#library(demoR)
-library(knitr)
-library(highr)
-
-source("../R/txt_style.R")
-source("../R/highlight.R")
-source("../R/demo_code.R")
-source("../R/utils-wrap.R")
-
-# # define a method for objects of the class demo_code
-knit_print.demo_code <- function(x, ...) {
-  
-  if (length(x) > 1) {
-    
-    asis_output(paste(attr(x, "print_string"), knitr:::wrap(x[[2]], ...)))
-    
-  } else {
-    
-    asis_output(attr(x, "print_string"))
-    
-  }
-
-}
-
-print.demo_code <- function(x, ...) {
-  
-  attr(x, "expression") %>%
-    eval() %>%
-    print()
-  
-}
-
-
-# 
-# bob <- expr(mean(1:10))
-# 
-# ugh <- function(x){
-# 
-#   toString(ensym(x))
-# 
-# }
-# 
-# ugh(bob)
-
-# hilight.demo_code <- function(x) {
-#   
-#   attr(x, "print_string")
-#   
-# }
-
-
-# 
-# 
-# # register the method
-registerS3method("knit_print", "demo_code", knit_print.demo_code)
-registerS3method("print", "demo_code", print.demo_code)
-#registerS3method("hlt_regexp", "demo_code", hlt_regexp.demo_code)
-#registerS3method("hilight", "demo_code", hilight.demo_code)
 
 ```
-
 
 ```{r}
 
-demo_code({
+bob <- demo_code({
   ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
     geom_point()
 }) %>%
@@ -126,11 +31,11 @@ demo_code({
 
 ```{r, echo = TRUE}
 
-thing <- demo_code(foo <- mean(1:10)) %>% hlt_input_vals()
-
-attr(thing, "print_string")
+demo_code(foo <- mean(1:10)) %>% hlt_input_vals(color = "red")
 
 foo + 5
+
+demo_code(foo + 7) %>% hlt_all()
 ```
 
 
