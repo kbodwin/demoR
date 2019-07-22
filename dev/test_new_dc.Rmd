@@ -1,0 +1,43 @@
+---
+title: "test_new_dc"
+author: "Kelly Bodwin"
+date: "July 21, 2019"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(knitr)
+
+source("/Users/kelly/Dropbox/demoR/R/demo_code.R")
+source("/Users/kelly/Dropbox/demoR/R/utils.R")
+
+registerS3method("knit_print", "demo_code", knit_print.demo_code)
+```
+
+```{r}
+.code_string <- '
+
+iris %>%
+    mutate(
+      Sepal.Size = Sepal.Length + Sepal.Width
+      ) %>%
+    group_by(Species) %>%
+    summarize(mean(Sepal.Length))
+
+iris %>% summary()
+
+thing <- 1:10
+
+plot(thing)
+
+'
+
+bob <- demo_code(.code_string)
+
+bob
+```
+
+
+
+

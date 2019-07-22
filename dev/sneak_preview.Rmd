@@ -50,7 +50,7 @@ demo_code({
 demoR code acts as if the wrappers and highlights were never there.  Thus, you can define objects, etc. within demo_code wraps and use them later:
 
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, eval = FALSE}
 
 demo_code(foo <- mean(1:10)) %>% hlt_input_vals()
 
@@ -76,8 +76,8 @@ demo_code({
 ```
 
 What the output looks like:
-```{r, echo = FALSE}
-demo_code({
+```{r, echo = FALSE, eval = FALSE}
+demo_code('
 
   iris %>%
     mutate(
@@ -86,7 +86,7 @@ demo_code({
     group_by(Species) %>%
     summarize(mean(Sepal.Length))
   
-}) %>%
+') %>%
   hlt_args(color = "green") %>%
   hlt_funs(color = "blue") %>%
   hlt_input_vals(color = "red") %>%
@@ -95,7 +95,7 @@ demo_code({
 
 
 ```{r}
-bob <- 
+.code_string <- 
   "
 
 iris %>%
@@ -105,11 +105,17 @@ iris %>%
     group_by(Species) %>%
     summarize(mean(Sepal.Length))
 
+iris %>% summarize()
+
+thing <- 1:10
+
+plot(thing)
+
 "
 
-thing<-dance_recital(bob)
+thing<-demo_code(.code_string)
 
-thing$value
+thing
 ```
 
 

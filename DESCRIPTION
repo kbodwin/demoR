@@ -24,6 +24,7 @@ Imports:
     magrittr,
     stringr,
     knitr,
-    ggplot2
+    ggplot2,
+    matahari
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
