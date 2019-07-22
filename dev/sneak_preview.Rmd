@@ -13,6 +13,24 @@ output: rmarkdown::html_document
 ```{r setup, include = FALSE}
 library(demoR)
 library(tidyverse)
+library(knitr)
+
+knit_print.demo_code <- function(x, ...) {
+
+  if (length(x) > 1) {
+
+    knitr::asis_output(paste(attr(x, "print_string"), knitr:::wrap(x[[2]], ...)))
+
+   } else {
+
+     knitr::asis_output(attr(x, "print_string"))
+
+   }
+
+}
+
+registerS3method("knit_print", "demo_code", knit_print.demo_code)
+
 ```
 
 
@@ -21,10 +39,10 @@ library(tidyverse)
 What your code chunk looks like:
 
 ```{r, eval = FALSE}
-demo_code({
+demo_code('
   ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
     geom_point()
-}) %>%
+') %>%
   hlt_args(color = "green") %>%
   hlt_funs(color = "blue") %>%
   hlt_input_vals(color = "red") %>%
@@ -34,10 +52,10 @@ demo_code({
 What the output looks like:
 
 ```{r, echo = FALSE, fig.width = 7, fig.height = 5}
-demo_code({
+demo_code('
   ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
     geom_point()
-}) %>%
+') %>%
   hlt_args(color = "green") %>%
   hlt_funs(color = "blue") %>%
   hlt_input_vals(color = "red") %>%
@@ -50,11 +68,11 @@ demo_code({
 demoR code acts as if the wrappers and highlights were never there.  Thus, you can define objects, etc. within demo_code wraps and use them later:
 
 
-```{r, echo = FALSE, eval = FALSE}
+```{r, echo = FALSE}
 
-demo_code(foo <- mean(1:10)) %>% hlt_input_vals()
+demo_code('foo <- mean(1:10)') %>% hlt_input_vals()
 
-demo_code(foo + 5)
+demo_code('foo + 5')
 
 ```
 
@@ -64,11 +82,11 @@ demo_code(foo + 5)
 
 What your chunk looks like:
 ```{r, eval = FALSE}
-demo_code({
+demo_code('
   iris %>%
     group_by(Species) %>%
     summarize(mean(Sepal.Length))
-}) %>%
+') %>%
   hlt_args(color = "green") %>%
   hlt_funs(color = "blue") %>%
   hlt_input_vals(color = "red") %>%
@@ -76,7 +94,7 @@ demo_code({
 ```
 
 What the output looks like:
-```{r, echo = FALSE, eval = FALSE}
+```{r, echo = FALSE}
 demo_code('
 
   iris %>%
@@ -92,30 +110,3 @@ demo_code('
   hlt_input_vals(color = "red") %>%
   hlt_regexp("Sepal.Length")
 ```
-
-
-```{r}
-.code_string <- 
-  "
-
-iris %>%
-    mutate(
-      Sepal.Size = Sepal.Length + Sepal.Width
-      ) %>%
-    group_by(Species) %>%
-    summarize(mean(Sepal.Length))
-
-iris %>% summarize()
-
-thing <- 1:10
-
-plot(thing)
-
-"
-
-thing<-demo_code(.code_string)
-
-thing
-```
-
-

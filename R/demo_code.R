@@ -3,20 +3,17 @@
 #' @export
 demo_code <- function(.code_string, eval_here = TRUE) {
 
-  .expr <- parse(text = .code_string)
+  .code_string <- str_trim(.code_string)
 
-  if (eval_here) {
+  if (eval_here) scope_and_run(.code_string)
 
-    scope_and_run(expr)
-
-  }
 
   print_string <- .code_string %>%
     str_trim() %>%
     str_replace_all("\n", "<br>") %>%
     txt_tocode()
 
-  new_demo_code <- evaluate::evaluate(.expr)
+  new_demo_code <- evaluate::evaluate(str_trim(.code_string))
 
   attr(new_demo_code, "print_string") <- print_string
   attr(new_demo_code, "class") <- "demo_code"
@@ -80,7 +77,6 @@ demo_code_multi <- function(.code_string, eval_here = TRUE, shatter = TRUE) {
 # }
 
 #' @export
-#' @imporFrom purrr map
 knit_print.demo_code <- function(x, ...) {
 
   #x$wrapped <- map(x$evaluations, ~map_if(.x, length(.x) > 1, function(val) knitr:::wrap(val, ...) %>% str_c(collapse = "")))

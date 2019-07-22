@@ -86,12 +86,12 @@ make_sandwiches <- function(meat, top_buns, bottom_buns = NULL) {
 
 # Goal: turn assignments into global assignments, but not if they are in a function.
 
-scope_and_run <- function(code_expr) {
+scope_and_run <- function(.code_string) {
 
-  rlang::enexpr(code_expr) %>%
-    deparse() %>%
+    .code_string %>%
     str_replace_all("(?!=\\<)\\<\\-", "<<-") %>%
-    str_c(collapse = "") %>% parse(text = .) %>%
+    str_c(collapse = "") %>%
+    parse(text = .) %>%
     eval()
 
 }
