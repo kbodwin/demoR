@@ -13,14 +13,15 @@ demo_code <- function(.code_string, eval_here = TRUE) {
 
   print_string <- .code_string %>%
     str_trim() %>%
-    str_replace_all("\n", "<br>")
+    str_replace_all("\n", "<br>") %>%
+    txt_tocode()
 
-  new_demo_code <- evaluate::evaluate(expr)
+  new_demo_code <- evaluate::evaluate(.expr)
 
   attr(new_demo_code, "print_string") <- print_string
-  attr(dc_list, "class") <- "demo_code"
+  attr(new_demo_code, "class") <- "demo_code"
 
-  return(dc_list)
+  return(new_demo_code)
 
 }
 
@@ -85,21 +86,23 @@ knit_print.demo_code <- function(x, ...) {
   #x$wrapped <- map(x$evaluations, ~map_if(.x, length(.x) > 1, function(val) knitr:::wrap(val, ...) %>% str_c(collapse = "")))
 
 
-  x$wrapped <- map(x$evaluations, function(val) if (length(val) > 2) knitr:::wrap(val[[2]], ...))
-
-  to_print <- paste(unlist(x$print_string), unlist(x$wrapped)) %>% str_c(collapse = " ")
-
-  asis_output(to_print)
+  # x$wrapped <- map(x$evaluations, function(val) if (length(val) > 2) knitr:::wrap(val[[2]], ...))
+  #
+  # to_print <- paste(unlist(x$print_string), unlist(x$wrapped)) %>% str_c(collapse = " ")
+  #
+  # asis_output(to_print)
 
   #to_print <- str_c(to_print, collapse = "<br>")
 
-    #knitr::asis_output(paste(attr(x, "print_string"), knitr:::wrap(x[[2]], ...)))
+  if (length(x) > 2) {
 
-  # } else {
-  #
-  #   knitr::asis_output(attr(x, "print_string"))
-  #
-  # }
+    knitr::asis_output(paste(attr(x, "print_string"), knitr:::wrap(x[[2]], ...)))
+
+   } else {
+
+     knitr::asis_output(attr(x, "print_string"))
+
+   }
 
 }
 
