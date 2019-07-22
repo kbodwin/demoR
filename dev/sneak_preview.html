@@ -211,30 +211,24 @@ $(document).ready(function () {
 <div id="doesnt-break-your-code-flow" class="section level2">
 <h2>Doesn’t break your code flow</h2>
 <p>demoR code acts as if the wrappers and highlights were never there. Thus, you can define objects, etc. within demo_code wraps and use them later:</p>
-<pre class="prettyprint"><code>foo &lt;- mean(<span style="background-color:#ffff7f">1:10</span>)</code></pre>
-<pre class="prettyprint"><code>foo + 5</code></pre>
-<pre><code>## [1] 10.5</code></pre>
+<pre class="prettyprint"><code>&quot;foo &lt;- mean(<span style="background-color:#ffff7f">1:10</span>)&quot;</code></pre>
+<pre class="prettyprint"><code>&quot;foo + 5&quot;</code></pre>
+<pre><code>## Error in eval(expr, envir, enclos): object 'foo' not found</code></pre>
 </div>
 <div id="to-copy-paste-on-twitter" class="section level2">
 <h2>(to copy paste on twitter)</h2>
 <p>What your chunk looks like:</p>
-<pre class="r"><code>demo_code({
+<pre class="r"><code>demo_code('
   iris %&gt;%
     group_by(Species) %&gt;%
     summarize(mean(Sepal.Length))
-}) %&gt;%
+') %&gt;%
   hlt_args(color = &quot;green&quot;) %&gt;%
   hlt_funs(color = &quot;blue&quot;) %&gt;%
   hlt_input_vals(color = &quot;red&quot;) %&gt;%
   hlt_regexp(&quot;Sepal.Length&quot;)</code></pre>
 What the output looks like:
-<pre class="prettyprint"><code><br>    iris %&gt;% <span style="color:blue">mutate</span>(<span style="color:green">Sepal.Size</span> = <span style="color:red"><span style="background-color:#ffff7f">Sepal.Length</span> + Sepal.Width</span>) %&gt;% <br>        <span style="color:blue">group_by</span>(<span style="color:red">Species</span>) %&gt;% <span style="color:blue">summarize</span>(<span style="color:blue">mean</span>(<span style="color:red"><span style="background-color:#ffff7f">Sepal.Length</span></span>))<br></code></pre>
-<pre><code>## # A tibble: 3 x 2
-##   Species    `mean(Sepal.Length)`
-##   &lt;fct&gt;                     &lt;dbl&gt;
-## 1 setosa                     5.01
-## 2 versicolor                 5.94
-## 3 virginica                  6.59</code></pre>
+<pre class="prettyprint"><code>&quot;\n\n  iris %&gt;%\n    <span style="color:blue">mutate</span>(<span style="color:red">\n      Sepal.Siz</span>e = <span style="color:red"><span style="background-color:#ffff7f">Sepal.Length</span> + Sepal.Width\n      </span>) %&gt;%\n    <span style="color:blue">group_by</span>(<span style="color:red">Species</span>) %&gt;%\n    <span style="color:blue">summarize</span>(<span style="color:blue">mean</span>(<span style="color:red"><span style="background-color:#ffff7f">Sepal.Length</span></span>))\n  \n&quot;</code></pre>
 </div>
 
 
