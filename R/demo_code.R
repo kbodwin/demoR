@@ -15,12 +15,46 @@ demo_code <- function(.code_string, eval_here = TRUE) {
 
   new_demo_code <- evaluate::evaluate(str_trim(.code_string))
 
+  is_output <- map(new_demo_code, class) != "source"
+
+  new_demo_code <- new_demo_code[is_output]
+
   attr(new_demo_code, "print_string") <- print_string
   attr(new_demo_code, "class") <- "demo_code"
 
   return(new_demo_code)
 
 }
+#'
+#' #' @export
+#' demo_code_blob <- function(.code_string, eval_here = TRUE) {
+#'
+#'   if (eval_here) {
+#'
+#'     scope_and_run(.code_string)
+#'
+#'   }
+#'
+#'   print_string <- .code_string %>%
+#'     str_trim() %>%
+#'     str_replace_all("\n", "<br>") %>%
+#'     txt_tocode()
+#'
+#'
+#'   new_demo_code <- evaluate::evaluate(str_trim(.code_string))
+#'
+#'   is_output <- map(new_demo_code, class) != "source"
+#'
+#'   new_demo_code <- new_demo_code[is_output]
+#'
+#'   attr(new_demo_code, "print_string") <- print_string
+#'   attr(new_demo_code, "class") <- "demo_code"
+#'
+#'   attr(dc_list, "class") <- "demo_code"
+#'
+#'   return(dc_list)
+#'
+#' }
 
 #' @importFrom matahari dance_recital
 #' @export
@@ -90,9 +124,12 @@ knit_print.demo_code <- function(x, ...) {
 
   #to_print <- str_c(to_print, collapse = "<br>")
 
-  if (length(x) > 2) {
+  if (length(x) > 0) {
 
-    knitr::asis_output(paste(attr(x, "print_string"), knitr:::wrap(x[[2]], ...)))
+    output_string <- map(x, function(val) knitr:::wrap(val, ...)) %>%
+      str_c(collapse = " ")
+
+    knitr::asis_output(paste(attr(x, "print_string"), output_string))
 
    } else {
 

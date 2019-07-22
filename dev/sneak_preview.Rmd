@@ -15,22 +15,6 @@ library(demoR)
 library(tidyverse)
 library(knitr)
 
-knit_print.demo_code <- function(x, ...) {
-
-  if (length(x) > 1) {
-
-    knitr::asis_output(paste(attr(x, "print_string"), knitr:::wrap(x[[2]], ...)))
-
-   } else {
-
-     knitr::asis_output(attr(x, "print_string"))
-
-   }
-
-}
-
-registerS3method("knit_print", "demo_code", knit_print.demo_code)
-
 ```
 
 
@@ -40,8 +24,8 @@ What your code chunk looks like:
 
 ```{r, eval = FALSE}
 demo_code('
-  ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
-    geom_point()
+  ggplot(iris, aes(x = Sepal.Length, fill = Species)) +
+    geom_histogram(alpha = 0.5)
 ') %>%
   hlt_args(color = "green") %>%
   hlt_funs(color = "blue") %>%
@@ -53,8 +37,8 @@ What the output looks like:
 
 ```{r, echo = FALSE, fig.width = 7, fig.height = 5}
 demo_code('
-  ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
-    geom_point()
+  ggplot(iris, aes(x = Sepal.Length, fill = Species)) +
+    geom_histogram(alpha = 0.5)
 ') %>%
   hlt_args(color = "green") %>%
   hlt_funs(color = "blue") %>%
@@ -110,3 +94,26 @@ demo_code('
   hlt_input_vals(color = "red") %>%
   hlt_regexp("Sepal.Length")
 ```
+
+
+## You can combine multiple lines of code into one demo
+
+If you want to highlight the same (types of) things in each line
+
+```{r, echo = FALSE}
+demo_code('
+
+bob <- 1:10
+
+bob <- bob + 2
+
+mean(bob)
+
+plot(bob)
+
+') %>%
+  hlt_funs() %>%
+  hlt_regexp("bob", color = "blue")
+
+```
+
