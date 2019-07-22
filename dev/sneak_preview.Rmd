@@ -52,9 +52,9 @@ demoR code acts as if the wrappers and highlights were never there.  Thus, you c
 
 ```{r, echo = FALSE}
 
-demo_code('foo <- mean(1:10)') %>% hlt_input_vals()
+demo_code(foo <- mean(1:10)) %>% hlt_input_vals()
 
-demo_code('foo + 5')
+demo_code(foo + 5)
 
 ```
 
@@ -64,11 +64,11 @@ demo_code('foo + 5')
 
 What your chunk looks like:
 ```{r, eval = FALSE}
-demo_code('
+demo_code({
   iris %>%
     group_by(Species) %>%
     summarize(mean(Sepal.Length))
-') %>%
+}) %>%
   hlt_args(color = "green") %>%
   hlt_funs(color = "blue") %>%
   hlt_input_vals(color = "red") %>%
@@ -92,3 +92,24 @@ demo_code('
   hlt_input_vals(color = "red") %>%
   hlt_regexp("Sepal.Length")
 ```
+
+
+```{r}
+bob <- 
+  "
+
+iris %>%
+    mutate(
+      Sepal.Size = Sepal.Length + Sepal.Width
+      ) %>%
+    group_by(Species) %>%
+    summarize(mean(Sepal.Length))
+
+"
+
+thing<-dance_recital(bob)
+
+thing$value
+```
+
+
