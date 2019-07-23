@@ -107,6 +107,12 @@ hlt_all.default <- function(.string, ...) {
 }
 
 
+#' @export
+hlt_fixed <- function(.string, pattern, ...) {
+
+  hlt_regexp(.string, fixed(pattern), ...)
+
+}
 
 #' @export
 hlt_args <- function(.string, ...) {
@@ -150,10 +156,10 @@ hlt_input_vals <- function(.string, ...) {
     hlt_regexp(vars_regexp2, ...)
 }
 
-
 #' @export
 hlt_diff <- function(.string1, .string2, ...) {
 
+  <script src="htmldiff.js"></script>
   ## need a function for string differences
 
 }
