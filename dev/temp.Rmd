@@ -1,0 +1,26 @@
+---
+title: "Untitled"
+author: "Kelly Bodwin"
+date: "July 21, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(demoR)
+```
+
+
+Here is a plot:
+
+```{r}
+demo_code('
+  x <- 5
+
+  barplot(iris$Sepal.Length)
+') %>%
+  hlt_funs()
+
+x + 7
+```
+
