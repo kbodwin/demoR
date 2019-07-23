@@ -86,11 +86,12 @@ make_sandwiches <- function(meat, top_buns, bottom_buns = NULL) {
 
 # Goal: turn assignments into global assignments, but not if they are in a function.
 
-# scope_it <- function(.string) {
-#
-#   .string %>%
-#
-#
-#   str_replace("(?!=\\<)\\<\\-", "<<-")
-#
-# }
+scope_and_run <- function(.code_string) {
+
+    .code_string %>%
+    str_replace_all("(?!=\\<)\\<\\-", "<<-") %>%
+    str_c(collapse = "") %>%
+    parse(text = .) %>%
+    eval()
+
+}

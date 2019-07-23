@@ -25,10 +25,19 @@ library(demoR)
 
 # Let's learn about cars
 
+####gonna have to define my own pre class to override syntax coloring I think :(
+
 ## mtcars ftw
 
 ```{r, echo = FALSE}
-demo_code(data(mtcars)) %>% hlt_regexp("mtcars") %>% hlt_funs(color = "red")
+demo_code('data(mtcars)') %>% hlt_regexp("mtcars") %>% hlt_funs(color = "red")
 
-demo_code(summary(mtcars)) %>% hlt_regexp("mtcars")%>% hlt_funs(color = "red")
+demo_code('summary(mtcars)') %>% hlt_regexp("mtcars")%>% hlt_funs(color = "red")
+
+```
+
+## math?
+
+```{r}
+demo_code('mean(1:10)') %>% hlt_regexp("mtcars")%>% hlt_funs(color = "red")
 ```

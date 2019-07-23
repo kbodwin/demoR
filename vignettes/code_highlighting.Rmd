@@ -14,51 +14,174 @@ vignette: >
 # )
 ```
 
-```{r setup}
+# Introduction
+
+The primary goal of the `demoR` package is to simplify the presentation of R code.
+
+```{r setup, message = FALSE, warning = FALSE}
 library(demoR)
-library(ggplot2)
+library(tidyverse)
 ```
 
-What your code chunk looks like:
+It is common to show source code, in addition to code output, as part of a conference talk, workshop, or lecture.  Often, we want to call attention to certain aspects of the code. 
 
-```{r, eval = FALSE}
-demo_code({
-  ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
-    geom_point()
-}) %>%
-  hlt_args(color = "green") %>%
-  hlt_funs(color = "blue") %>%
-  hlt_input_vals(color = "red") %>%
-  hlt_regexp("Sepal.Length")
-```
-
-What the output looks like:
-
-```{r, echo = FALSE, fig.width = 7, fig.height = 5}
-demo_code({
-  ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
-    geom_point()
-}) %>%
-  hlt_args(color = "green") %>%
-  hlt_funs(color = "blue") %>%
-  hlt_input_vals(color = "red") %>%
-  hlt_regexp("Sepal.Length")
-```
-
-
-demoR code acts as if the wrappers and highlights were never there.  Thus, you can define objects, etc. within demo_code wraps and use them later:
-
+For example, suppose you want to illustrate to a new learner the use of the pipe `%>%`.  You might want to create a slide that shows the following:
 
 ```{r, echo = FALSE}
 
-demo_code(foo <- mean(1:10)) %>% hlt_input_vals()
+demo_code('
 
-demo_code(foo)
+iris %>%
+  group_by(Species) %>%
+  summarize(mean(Sepal.Length))
+
+') %>%
+  hlt_regexp(fixed("%>%"))
+
 
 ```
+
+
+Without `demoR`, your approach might be to type your code into your code chunk, copy-paste it to a string, and manually format that string using html.  What a headache!  
+
+In this vignette, we will show you how to use the `demoR` package to simultaneously run and format code.
+
+
+
+# demo_code Objects
+
+The core element of the `demoR` package is an object of the class `demo_code`.  These objects are very easily created by wrapping your code in quotation marks and the `demo_code()` function:
+
+```{r, eval = FALSE}
+demo_code('
+
+iris %>%
+  group_by(Species) %>%
+  summarize(mean(Sepal.Length))
+
+')
+```
+
+
+A `demo_code` object behaves exactly like the original code: you can run code chunks to see results and knit your R Markdown file to html (LaTeX coming soon!).
+
+However, in addition to the output of the source code, the knitted output of a `demo_code` object includes a formatted print out of the source code.
+
+```{r, eval = TRUE}
+demo_code('
+
+iris %>%
+  group_by(Species) %>%
+  summarize(mean(Sepal.Length))
+
+')
+```
+
+**Important Note:** In this vignette, we will of course always display the original chunk code.  However, when using `demoR` for yourself, you'll want to set your chunks with `demo_code` content to `echo = FALSE` to avoid the double-printing effect!
+
+# The `hlt_*` functions
+
+So far, we have simply re-created ordinary R Markdown output.  The advantage of a `demo_code` object is that you can add formatting to the source code without altering the output.
+
+## hlt_regexp
+
+The main function you will use is `hlt_regexp()`.  This takes as arguments:
+
+* A string or a `demo_code` object
+
+* A regular expression
+
+* Any number of formatting parameters
+
+If no formatting parameters are supplied, `hlt_*` will default to ordinary yellow-background highlighting.
+
+`hlt_regexp` returns a `demo_code` object, so it is pipe friendly!
+
+Suppose you want to highlight the pipe (`%>%`) in yellow, highlight the variable name `Sepal.Length` in pink, and change the text color of `Species` to blue
+
+Your code chunk:
+
+```{r, eval = FALSE}
+demo_code('
+
+iris %>%
+  group_by(Species) %>%
+  summarize(mean(Sepal.Length))
+
+') %>%
+  hlt_regexp(fixed("%>%")) %>%
+  hlt_regexp("Sepal.Length", background = "pink") %>%
+  hlt_regexp("Species", color = "blue")
+```
+
+Your knitted output:
+
+```{r, echo = FALSE}
+demo_code('
+
+iris %>%
+  group_by(Species) %>%
+  summarize(mean(Sepal.Length))
+
+') %>%
+  hlt_regexp(fixed("%>%")) %>%
+  hlt_regexp("Sepal.Length", background = "pink") %>%
+  hlt_regexp("Species", color = "blue")
+```
+
+
+## Syntax highlighting
+
+`demoR` also includes a few shortcuts for highlighting specific aspsects of R source code.  Currently, these functions are:
+
+* `hlt_funs()` for *functions*
+
+* `hlt_args()` for *arguments to functions*
+
+* `hlt_input_vals()` for *values assigned to function arguments*
+
+For example:
+
+```{r, fig.width = 7, fig.height = 5}
+demo_code('
+
+ggplot(iris, aes(x = Sepal.Length, fill = Species)) +
+  geom_histogram(alpha = 0.5)
+
+') %>%
+  hlt_args(color = "green") %>%
+  hlt_funs(color = "blue") %>%
+  hlt_input_vals(color = "red") %>%
+  hlt_regexp("Sepal.Length")
+```
+
+
+# Defining objects
+
+One nice feature of a `demo_code` object, as compared to a string, it that it evaluates when run.  This means that you can define objects in your demo code, and use them later in your analysis as you normally would:
+
+
 
 ```{r}
 
+demo_code('foo <- mean(1:10)') %>% hlt_funs()
+
 foo + 5
 ```
+
+
+A word of caution: Make sure you define your objects in your code string, not outside the `demo_code()` function!  For example, the following approach has two problems:
+
+1. `foo` contains the `demo_code` object, not the result of `mean(1:10)`, so  `foo + 5` throws an error.
+
+2. The `demo_code` object is stored as `foo` rather than printed, so no highlighted code is included in the knitted output.
+
+```{r, error = TRUE}
+foo <- demo_code('mean(1:10)') %>% hlt_funs()
+
+foo + 5
+```
+
+
+
 

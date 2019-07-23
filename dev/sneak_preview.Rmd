@@ -13,6 +13,8 @@ output: rmarkdown::html_document
 ```{r setup, include = FALSE}
 library(demoR)
 library(tidyverse)
+library(knitr)
+
 ```
 
 
@@ -21,10 +23,10 @@ library(tidyverse)
 What your code chunk looks like:
 
 ```{r, eval = FALSE}
-demo_code({
-  ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
-    geom_point()
-}) %>%
+demo_code('
+  ggplot(iris, aes(x = Sepal.Length, fill = Species)) +
+    geom_histogram(alpha = 0.5)
+') %>%
   hlt_args(color = "green") %>%
   hlt_funs(color = "blue") %>%
   hlt_input_vals(color = "red") %>%
@@ -34,10 +36,10 @@ demo_code({
 What the output looks like:
 
 ```{r, echo = FALSE, fig.width = 7, fig.height = 5}
-demo_code({
-  ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
-    geom_point()
-}) %>%
+demo_code('
+  ggplot(iris, aes(x = Sepal.Length, fill = Species)) +
+    geom_histogram(alpha = 0.5)
+') %>%
   hlt_args(color = "green") %>%
   hlt_funs(color = "blue") %>%
   hlt_input_vals(color = "red") %>%
@@ -52,9 +54,14 @@ demoR code acts as if the wrappers and highlights were never there.  Thus, you c
 
 ```{r, echo = FALSE}
 
-demo_code(foo <- mean(1:10)) %>% hlt_input_vals()
+demo_code('foo <- mean(1:10)') %>% 
+  hlt_input_vals() %>%
+  hlt_regexp("foo")
 
-demo_code(foo + 5)
+```
+
+```{r}
+foo + 5
 
 ```
 
@@ -64,15 +71,20 @@ demo_code(foo + 5)
 
 What your chunk looks like:
 ```{r, eval = FALSE}
-demo_code({
+demo_code('
+
   iris %>%
+    mutate(
+      Sepal.Size = Sepal.Length + Sepal.Width
+      ) %>%
     group_by(Species) %>%
-    summarize(mean(Sepal.Length))
-}) %>%
+    summarize(mean_size = mean(Sepal.Length))
+
+') %>%
   hlt_args(color = "green") %>%
   hlt_funs(color = "blue") %>%
   hlt_input_vals(color = "red") %>%
-  hlt_regexp("Sepal.Length")
+  hlt_regexp("Sepal.Size")
 ```
 
 What the output looks like:
@@ -84,32 +96,34 @@ demo_code('
       Sepal.Size = Sepal.Length + Sepal.Width
       ) %>%
     group_by(Species) %>%
-    summarize(mean(Sepal.Length))
+    summarize(mean_size = mean(Sepal.Size))
   
 ') %>%
   hlt_args(color = "green") %>%
   hlt_funs(color = "blue") %>%
   hlt_input_vals(color = "red") %>%
-  hlt_regexp("Sepal.Length")
+  hlt_regexp("Sepal.Size")
 ```
 
 
-```{r}
-bob <- 
-  "
+## You can combine multiple lines of code into one demo
 
-iris %>%
-    mutate(
-      Sepal.Size = Sepal.Length + Sepal.Width
-      ) %>%
-    group_by(Species) %>%
-    summarize(mean(Sepal.Length))
+If you want to highlight the same (types of) things in each line
 
-"
+```{r, echo = FALSE}
+demo_code('
 
-thing<-dance_recital(bob)
+bob <- 1:10
 
-thing$value
+bob <- bob + 2
+
+mean(bob)
+
+plot(bob)
+
+') %>%
+  hlt_funs() %>%
+  hlt_regexp("bob", color = "blue")
+
 ```
-
 
