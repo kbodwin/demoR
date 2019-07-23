@@ -139,10 +139,19 @@ knit_print.demo_code <- function(x, ...) {
 
 }
 
+#' @export
+# We don't want to print out any of the demo code info
+# We do want to print the output of code
 
-# print.demo_code <- function(x, ...) {
-#
-# }
+print.demo_code <- function(x, ...) {
+
+  if (length(x) > 0) {
+
+    map(x, print)
+
+  }
+
+}
 
 
 
