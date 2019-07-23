@@ -25,6 +25,7 @@ Imports:
     stringr,
     knitr,
     ggplot2,
-    matahari
+    matahari,
+    diffobj
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1

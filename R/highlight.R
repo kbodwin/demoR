@@ -159,7 +159,7 @@ hlt_input_vals <- function(.string, ...) {
 #' @export
 hlt_diff <- function(.string1, .string2, ...) {
 
-  <script src="htmldiff.js"></script>
+  #<script src="htmldiff.js"></script>
   ## need a function for string differences
 
 }
