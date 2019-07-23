@@ -28,7 +28,7 @@ library(demoR)
 ## mtcars ftw
 
 ```{r, echo = FALSE}
-demo_code(data(mtcars)) %>% hlt_regexp("mtcars") %>% hlt_funs(color = "red")
+demo_code('data(mtcars)') %>% hlt_regexp("mtcars") %>% hlt_funs(color = "red")
 
-demo_code(summary(mtcars)) %>% hlt_regexp("mtcars")%>% hlt_funs(color = "red")
+demo_code('summary(mtcars)') %>% hlt_regexp("mtcars")%>% hlt_funs(color = "red")
 ```
