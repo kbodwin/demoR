@@ -39,3 +39,17 @@ demo_code('foo + 7') %>% hlt_all()
 ```
 
 
+```{r}
+testfn <- function(x) {
+  
+  dance_recital(x, evaluate = FALSE)
+  
+}
+
+testfn("iris %>%\n    mutate(\n      Sepal.Size = Sepal.Length + Sepal.Width\n      ) %>%\n    group_by(Species) %>%\n    summarize(mean(Sepal.Length))")
+
+testfn("plot(1:10)")
+```
+
+
+

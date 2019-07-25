@@ -111,7 +111,7 @@ iris %>%
 ') %>%
   hlt_regexp(fixed("%>%")) %>%
   hlt_regexp("Sepal.Length", background = "pink") %>%
-  hlt_regexp("Species", color = "blue")
+  hlt_regexp("Species", color = "CornflowerBlue")
 ```
 
 Your knitted output:
@@ -125,8 +125,8 @@ iris %>%
 
 ') %>%
   hlt_regexp(fixed("%>%")) %>%
-  hlt_regexp("Sepal.Length", background = "pink") %>%
-  hlt_regexp("Species", color = "blue")
+  hlt_regexp("Sepal.Length", background = "Pink") %>%
+  hlt_regexp("Species", color = "CornflowerBlue")
 ```
 
 
@@ -149,10 +149,10 @@ ggplot(iris, aes(x = Sepal.Length, fill = Species)) +
   geom_histogram(alpha = 0.5)
 
 ') %>%
-  hlt_args(color = "green") %>%
-  hlt_funs(color = "blue") %>%
-  hlt_input_vals(color = "red") %>%
-  hlt_regexp("Sepal.Length")
+  hlt_args(color = "CornflowerBlue") %>%
+  hlt_funs(color = "Coral", underline = TRUE) %>%
+  hlt_input_vals(background = "Aquamarine") %>%
+  hlt_regexp("Sepal.Length", background = "pink")
 ```
 
 
@@ -183,5 +183,9 @@ foo + 5
 ```
 
 
+## A note about colors
 
+`demoR` gives you complete freedom to choose the colors of your highlighted elements, so long as the color name is a [recognized html name](https://www.w3schools.com/colors/colors_names.asp) or a hex code.
+
+However, please remember to be judicious in your color choices, and to keep in mind [how your colors appear to colorblind individuals](https://venngage.com/blog/color-blind-friendly-palette/).
 

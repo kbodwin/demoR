@@ -1,12 +1,40 @@
-## an object of type demo_code is a language object that has a print_string attribute
-
+#' Creates an object of the class \code{demo_code}
+#'
+#' \code{demo_code} objects are evaluated R code, returned from \code{evaluate::evaluate}, with an attached attribute called \code{print_string} which sets up fancy formatting for knitting.
+#'
+#' @param .code_string A string containing executable R code.
+#' @param eval_here A boolean specifying whether the code should be immediately evaluated, in addition to creating the \code{demo_code} object. (Defaults to \code{TRUE})
+#'
+#' @return A \code{demo_code} object.
+#'
+#' @seealso \code{\link{hlt_*}}
+#'
+#' @examples
+#'
+#' # When run in console, this will print only the results of mean(1:10)
+#' my_dc <- demo_code('mean(1:10)') %>% hlt_funs()
+#'
+#' # The demo_code object itself has no output
+#'
+#' my_dc
+#'
+#' # However, when knitted, the source code is formatted.
+#'
+#' attr(my_dc, "print_string")
+#'
+#'
+#' # Objects defined in demo_code are created in the environment
+#'
+#' demo_code('foo <- mean(1:10)')
+#'
+#' foo + 5
+#'
+#'
+#'
 #' @export
 demo_code <- function(.code_string, eval_here = TRUE) {
 
   .code_string <- str_trim(.code_string)
-
-  if (eval_here) scope_and_run(.code_string)
-
 
   print_string <- .code_string %>%
     str_trim() %>%
@@ -15,100 +43,32 @@ demo_code <- function(.code_string, eval_here = TRUE) {
 
   new_demo_code <- evaluate::evaluate(str_trim(.code_string))
 
-  is_output <- map(new_demo_code, class) != "source"
+  is_output <- purrr::map(new_demo_code, class) != "source"
+
+  # If evaluating code on the spot, save sources.
+  # If not, blank out sources.
+  if (eval_here) {
+
+    sources <- unlist(new_demo_code[!is_output])
+
+  } else {
+
+    sources <- list()
+
+  }
 
   new_demo_code <- new_demo_code[is_output]
 
   attr(new_demo_code, "print_string") <- print_string
+  attr(new_demo_code, "sources") <- sources
   attr(new_demo_code, "class") <- "demo_code"
 
   return(new_demo_code)
 
 }
-#'
-#' #' @export
-#' demo_code_blob <- function(.code_string, eval_here = TRUE) {
-#'
-#'   if (eval_here) {
-#'
-#'     scope_and_run(.code_string)
-#'
-#'   }
-#'
-#'   print_string <- .code_string %>%
-#'     str_trim() %>%
-#'     str_replace_all("\n", "<br>") %>%
-#'     txt_tocode()
-#'
-#'
-#'   new_demo_code <- evaluate::evaluate(str_trim(.code_string))
-#'
-#'   is_output <- map(new_demo_code, class) != "source"
-#'
-#'   new_demo_code <- new_demo_code[is_output]
-#'
-#'   attr(new_demo_code, "print_string") <- print_string
-#'   attr(new_demo_code, "class") <- "demo_code"
-#'
-#'   attr(dc_list, "class") <- "demo_code"
-#'
-#'   return(dc_list)
-#'
-#' }
 
-#' @importFrom matahari dance_recital
-#' @export
-demo_code_multi <- function(.code_string, eval_here = TRUE, shatter = TRUE) {
 
-  dc_list <- matahari::dance_recital(.code_string, evaluate = FALSE)
-
-  if (eval_here) {
-
-    purrr::map(dc_list$expr, scope_and_run)
-
-  }
-
-  .code_string <- .code_string %>%
-    str_trim() %>%
-    str_replace_all("\n", "<br>")
-
-  if (shatter) {
-
-    print_strings <- str_split(.code_string, "((\\<br\\>){2,})|(;(\\<br\\>)*)") %>% unlist() %>% as.list()
-
-  } else {
-
-    print_strings <- as.list(c(.code_string, rep(NULL, nrow(dc_list) - 1)))
-
-  }
-
-  dc_list$print_strings <- print_strings
-  dc_list$evaluations <- map(dc_list$expr, ~evaluate::evaluate(.x))
-
-  attr(dc_list, "class") <- "demo_code"
-
-  return(dc_list)
-
-}
-
-# eval_and_wrap <- function(.expr, ...) {
-#
-#   .expr <- enexpr(.expr)
-#   my_output <- evaluate::evaluate(.expr)
-#
-#   if (length(my_output) > 1) {
-#
-#     wrapped <- map(my_output[-1], function(x) knitr:::wrap(x, ...)) %>% str_c(collapse = "") %>% unlist()
-#
-#   } else {
-#
-#     wrapped <- ""
-#
-#   }
-#
-#   return(wrapped)
-#
-# }
+#' S3 method for knitting a \code{demo_code} object
 
 #' @export
 knit_print.demo_code <- function(x, ...) {
@@ -126,7 +86,7 @@ knit_print.demo_code <- function(x, ...) {
 
   if (length(x) > 0) {
 
-    output_string <- map(x, function(val) knitr:::wrap(val, ...)) %>%
+    output_string <- purrr::map(x, function(val) knitr:::wrap(val, ...)) %>%
       str_c(collapse = " ")
 
     knitr::asis_output(paste(attr(x, "print_string"), output_string))
@@ -139,23 +99,15 @@ knit_print.demo_code <- function(x, ...) {
 
 }
 
+#' S3 method for printing a \code{demo_code}
+#'
+#' Print results of evaluating sources.  Do NOT print any extra \code{demo_code} object info.
+#'
 #' @export
-# We don't want to print out any of the demo code info
-# We do want to print the output of code
 
 print.demo_code <- function(x, ...) {
 
-  if (length(x) > 0) {
-
-    map(x, print)
-
-  }
+  #print(attr(x, "sources"))
+  map(attr(x, "sources"), scope_run_print)
 
 }
-
-
-
-
-
-# rx_tags <- "(\\<[^\\<\\>]*\\>)"
-# rx_between <- "((?<=\\>|^)([^\\<]|(\\<(?=(\\-|\\<))))*(?=\\<|$))"

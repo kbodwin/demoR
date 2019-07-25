@@ -2,10 +2,37 @@
 % Please edit documentation in R/txt_style.R
 \name{txt_style}
 \alias{txt_style}
+\alias{txt_color}
+\alias{txt_colour}
+\alias{txt_size}
+\alias{txt_background}
+\alias{txt_font}
+\alias{txt_bold}
+\alias{txt_emph}
+\alias{txt_ul}
+\alias{txt_tocode}
 \title{Wraps text in html or latex code for formatting}
 \usage{
 txt_style(x, type = "html", bold = FALSE, underline = FALSE,
   italics = FALSE, ...)
+
+txt_color(x, color = "red")
+
+txt_colour(x, colour = "red")
+
+txt_size(x, size = "large")
+
+txt_background(x, bg_color = "#ffff7f")
+
+txt_font(x, font)
+
+txt_bold(x)
+
+txt_emph(x)
+
+txt_ul(x)
+
+txt_tocode(x)
 }
 \arguments{
 \item{x}{The string to be wrapped}
@@ -20,6 +47,29 @@ txt_style(x, type = "html", bold = FALSE, underline = FALSE,
 
 \item{...}{various display options: any html CSS \code{style} options, or one of \code{font}, \code{size}, \code{color}, \code{background}, \code{style}.}
 }
+\value{
+A string containing \code{x} with html wrappers.
+}
 \description{
-\code{txt_style} returns a string including styling wrappers
+\code{txt_style} adds appropriate html style wrappers to a string. Any number of options can be specified, as long as they match html CSS tags names.
+}
+\details{
+\code{txt_*} are shortcuts for specific individual style options
+
+Warning: These are simple direct wrappers for strings only.  If you are working with \code{demo_code} objects, you should instead use \coe{\link{hlt_*}}.
+}
+\examples{
+# General use
+txt_style("I am highlighted!")
+txt_style("I am blue and bold.", color = "blue", bold = TRUE)
+
+# Shortcuts
+txt_color("I am red.")
+txt_color("I am blue.", color = "blue")
+
+# Code styling wrapper
+txt_tocode("I am code.")
+}
+\seealso{
+\code{\link{hlt_*}}
 }

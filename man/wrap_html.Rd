@@ -14,5 +14,5 @@ wrap_html(x, opts_list)
 \item{type}{The style of display, defaults to "html"  (currently nothing else is supported, sorry)}
 }
 \description{
-\code{wrap_html} returns a string with styling wrappers
+\code{wrap_html} returns a string with styling wrappers from a list of style tag names and values.
 }

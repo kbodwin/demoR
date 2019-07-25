@@ -34,6 +34,8 @@ plot(thing)
 
 '
 
+demo_code(.code_string)
+
 bob <- demo_code('
 iris %>%
     mutate(
