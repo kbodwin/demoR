@@ -86,7 +86,11 @@ make_sandwiches <- function(meat, top_buns, bottom_buns = NULL) {
 
 # Goal: turn assignments into global assignments, but not if they are in a function.
 
-scope_run_print <- function(.code_string) {
+scope_run_print <- function(.expr) {
+
+  .code_string <- enexpr(.expr) %>%
+    deparse() %>%
+    str_c(collapse = "")
 
 
   # For object definitions, rescope but print nothing.
@@ -125,3 +129,14 @@ scope_run_print <- function(.code_string) {
 #   }
 #
 # }
+
+expr_to_string <- function(.expr) {
+
+  enexpr(.expr) %>%
+    deparse() %>%
+    str_remove("^\\{") %>%
+    str_remove("\\}$") %>%
+    str_trim() %>%
+    str_c(collapse = "\n")
+
+}

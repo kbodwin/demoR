@@ -48,6 +48,27 @@ iris %>%
 bob
 ```
 
+```{r}
+.code_string <- expr({
+  
+  iris %>%
+  mutate(
+    Sepal.Size = Sepal.Length + Sepal.Width
+    ) %>%
+  group_by(Species) %>%
+  summarize(mean(Sepal.Length))
+
+iris %>% summary()
+
+thing <- 1:10
+
+plot(thing)
+
+})
+
+
+demo_code(thing)
+```
 
 
 

@@ -34,6 +34,19 @@
 #' @export
 demo_code <- function(.code_string, eval_here = TRUE) {
 
+  check_for_expr <- enexpr(.code_string)
+
+  if (class(check_for_expr) != "character") {
+
+    .code_string <- check_for_expr %>%
+      deparse() %>%
+      str_remove("^\\{") %>%
+      str_remove("\\}$") %>%
+      str_trim() %>%
+      str_c(collapse = "\n")
+
+  }
+
   .code_string <- str_trim(.code_string)
 
   print_string <- .code_string %>%
@@ -41,26 +54,23 @@ demo_code <- function(.code_string, eval_here = TRUE) {
     str_replace_all("\n", "<br>") %>%
     txt_tocode()
 
-  new_demo_code <- evaluate::evaluate(str_trim(.code_string))
+  #new_demo_code <- evaluate::evaluate(str_trim(.code_string))
+  new_demo_code <- matahari::dance_recital(.code_string, eval = TRUE)
 
-  is_output <- purrr::map(new_demo_code, class) != "source"
+  #is_output <- purrr::map(new_demo_code, class) != "source"
 
   # If evaluating code on the spot, save sources.
   # If not, blank out sources.
-  if (eval_here) {
+  # if (eval_here) {
+  #
+  #   map(new_demo_code$expr, scope_run_print)
+  #
+  # }
 
-    sources <- unlist(new_demo_code[!is_output])
-
-  } else {
-
-    sources <- list()
-
-  }
-
-  new_demo_code <- new_demo_code[is_output]
+  #new_demo_code <- new_demo_code[is_output]
 
   attr(new_demo_code, "print_string") <- print_string
-  attr(new_demo_code, "sources") <- sources
+  #attr(new_demo_code, "sources") <- sources
   attr(new_demo_code, "class") <- "demo_code"
 
   return(new_demo_code)
