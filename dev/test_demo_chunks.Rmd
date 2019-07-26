@@ -1,7 +1,6 @@
 ---
-title: "Parsing Expressions"
+title: "Using demoR with Code Chunks"
 author: "Kelly Bodwin"
-date: "July 25, 2019"
 output: html_document
 ---
 
@@ -43,9 +42,9 @@ thing <-              1:10
 
 What the first chunk looks like:
 
-```
+````
 
-```{r, demo = "how_to_plot"}
+```{r, include = FALSE, demo = "how_to_plot"}`r ''`
 
 thing <-              1:10
 
@@ -56,16 +55,20 @@ thing <-              1:10
 
 ```
 
-```
+````
 
 
 What the second chunk looks like:
-```{r, eval = FALSE}
+````
+
+```{r, echo = FALSE}`r ''`
 
 create_demo("how_to_plot") %>% 
   hlt_funs() %>% 
   hlt_regexp("#[^\n]*")
 ```
+
+````
 
 Knitted Output:
 
