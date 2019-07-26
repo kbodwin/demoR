@@ -41,26 +41,14 @@ demo_code <- function(.code_string, eval_here = TRUE) {
     str_replace_all("\n", "<br>") %>%
     txt_tocode()
 
-  new_demo_code <- invisble(evaluate::evaluate(str_trim(.code_string)))
+  new_demo_code <- evaluate::evaluate(.code_string)
 
   is_output <- purrr::map(new_demo_code, class) != "source"
 
-  # If evaluating code on the spot, save sources.
-  # If not, blank out sources.
-  if (eval_here) {
-
-    sources <- unlist(new_demo_code[!is_output])
-
-  } else {
-
-    sources <- list()
-
-  }
-
   new_demo_code <- new_demo_code[is_output]
+  attributes(new_demo_code) <- NULL
 
   attr(new_demo_code, "print_string") <- print_string
-  attr(new_demo_code, "sources") <- sources
   attr(new_demo_code, "class") <- "demo_code"
 
   return(new_demo_code)

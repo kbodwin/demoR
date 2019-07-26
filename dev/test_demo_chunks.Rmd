@@ -1,0 +1,78 @@
+---
+title: "Parsing Expressions"
+author: "Kelly Bodwin"
+date: "July 25, 2019"
+output: html_document
+---
+
+```{r}
+library(demoR)
+```
+
+
+
+
+
+
+
+```{r, include = FALSE}
+library(tidyverse)
+library(knitr)
+
+hook_chunk <- knit_hooks$get('chunk')
+
+knit_hooks$set(chunk = function(x, options) {
+  if (!is.null(options$demo)) {
+    assign(options$demo, x, envir = .GlobalEnv)
+  } 
+  
+  hook_chunk(x, options)
+})
+```
+
+```{r, demo = "how_to_plot", include = FALSE}
+
+thing <-              1:10
+
+    plot(thing)  #commenting
+    
+    
+#I am a comment
+
+```
+
+What the first chunk looks like:
+
+```
+
+```{r, demo = "how_to_plot"}
+
+thing <-              1:10
+
+    plot(thing)  #commenting
+    
+    
+#I am a comment
+
+```
+
+```
+
+
+What the second chunk looks like:
+```{r, eval = FALSE}
+
+create_demo("how_to_plot") %>% 
+  hlt_funs() %>% 
+  hlt_regexp("#[^\n]*")
+```
+
+Knitted Output:
+
+```{r, echo = FALSE}
+create_demo("how_to_plot") %>% 
+  hlt_funs() %>% 
+  hlt_regexp("#[^\n]*")
+```
+
+

@@ -7,5 +7,5 @@
 \method{print}{demo_code}(x, ...)
 }
 \description{
-Do NOT print any extra \code{demo_code} object info.
+Print results of evaluating sources.  Do NOT print any extra \code{demo_code} object info.
 }
