@@ -41,7 +41,7 @@ demo_code <- function(.code_string, eval_here = TRUE) {
     str_replace_all("\n", "<br>") %>%
     txt_tocode()
 
-  new_demo_code <- evaluate::evaluate(str_trim(.code_string))
+  new_demo_code <- invisble(evaluate::evaluate(str_trim(.code_string)))
 
   is_output <- purrr::map(new_demo_code, class) != "source"
 
