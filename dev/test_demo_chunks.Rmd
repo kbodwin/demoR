@@ -79,3 +79,17 @@ create_demo("how_to_plot") %>%
 ```
 
 
+Old direct-from-string option still works, and is a good way to demonstrate broken code:
+
+```{r, error = TRUE}
+demo_code('
+
+thing <- 1:10
+
+plot(thing
+
+') %>% hlt_funs()
+```
+
+
+
