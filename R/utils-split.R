@@ -65,7 +65,15 @@ split_sandwiches <- function(.string, start_rx, end_rx = NULL) {
   }
 
 
-
+#' Recombines "sandwich" elements in proper order
+#'
+#' Helper for \code{\link{split_sandwiches}}.  Once sections have been identified and extracted, recombines them in the correct order.
+#'
+#' @param meat Character vector containing string sectiosn between delimiters
+#' @param top_buns Character vector containing starting delimiters
+#' @param bottom_buns Character vector containing ending delimiters
+#'
+#' @return A character vector.
 make_sandwiches <- function(meat, top_buns, bottom_buns = NULL) {
 
     n_buns <- length(top_buns) + length(bottom_buns)

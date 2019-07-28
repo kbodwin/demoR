@@ -17,8 +17,6 @@
 #'
 #' @seealso \code{\link{hlt_*}}
 #'
-#' @export
-#'
 #' @importFrom stringr str_c str_replace
 #'
 #' @examples
@@ -32,8 +30,8 @@
 #'
 #' # Code styling wrapper
 #' txt_tocode("I am code.")
-
-
+#'
+#' @export
 txt_style <- function(x, type = "html",
                       bold = FALSE, underline = FALSE, italics = FALSE, ...) {
 

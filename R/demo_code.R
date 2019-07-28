@@ -56,9 +56,6 @@ demo_code <- function(.code_string, eval_here = TRUE) {
 
   new_demo_code <- evaluate::evaluate(.code_string)
 
-  is_output <- purrr::map(new_demo_code, class) != "source"
-
-  new_demo_code <- new_demo_code[is_output]
   attributes(new_demo_code) <- NULL
 
   attr(new_demo_code, "class") <- "demo_code"
@@ -81,9 +78,13 @@ demo_code <- function(.code_string, eval_here = TRUE) {
 
 
 #' S3 method for knitting a \code{demo_code} object
-
+#'
 #' @export
 knit_print.demo_code <- function(x, ...) {
+
+  is_output <- purrr::map(x, class) != "source"
+
+  x <- x[is_output]
 
   if (length(x) > 0) {
 
@@ -102,18 +103,21 @@ knit_print.demo_code <- function(x, ...) {
 
 #' S3 method for printing a \code{demo_code}
 #'
-#' Prints nothing, \code{demo_code} objects should be seen and not heard.
+#' Prints nothing; \code{demo_code} objects should be seen and not heard.
 #'
-#' If the \code{demo_code} object was created by inputting a string, we should run that code.
+#' If the \code{demo_code} object was created by inputting a string, we should run that code and print any output.s
 #'
 #' @export
-
 print.demo_code <- function(x, ...) {
 
-  # if code is being supplied as an input object,
+  # if code is being supplied as an input object, run things, with objects defined in global environment
 
   if (stringr::str_detect(attr(x, "origin"), "direct")) {
 
-    scope_run_print(x
+    is_src <- purrr::map(x, class) == "source"
+
+    purrr::map(x[is_src], scope_run_print)
+
+  }
 
 }
