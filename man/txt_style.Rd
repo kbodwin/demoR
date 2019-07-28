@@ -56,7 +56,7 @@ A string containing \code{x} with html wrappers.
 \details{
 \code{txt_*} are shortcuts for specific individual style options
 
-Warning: These are simple direct wrappers for strings only.  If you are working with \code{demo_code} objects, you should instead use \coe{\link{hlt_*}}.
+Warning: These are simple direct wrappers for strings only.  If you are working with \code{demo_code} objects, you should instead use \code{\link{hlt_*}}.
 }
 \examples{
 # General use

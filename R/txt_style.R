@@ -4,7 +4,7 @@
 #'
 #' \code{txt_*} are shortcuts for specific individual style options
 #'
-#' Warning: These are simple direct wrappers for strings only.  If you are working with \code{demo_code} objects, you should instead use \coe{\link{hlt_*}}.
+#' Warning: These are simple direct wrappers for strings only.  If you are working with \code{demo_code} objects, you should instead use \code{\link{hlt_*}}.
 #'
 #' @param x The string to be wrapped
 #' @param type The style of display, defaults to "html"  (currently nothing else is supported, sorry)

@@ -2,12 +2,12 @@
 #'
 #' \code{demo_code} objects are evaluated R code, returned from \code{evaluate::evaluate}, with an attached attribute called \code{print_string} which sets up fancy formatting for knitting.
 #'
-#' @param .code_string A string containing executable R code.
+#' @param .code_string A string containing executable R code OR a valid expression that will be converted to a string via \code{deparse()}
 #' @param eval_here A boolean specifying whether the code should be immediately evaluated, in addition to creating the \code{demo_code} object. (Defaults to \code{TRUE})
 #'
 #' @return A \code{demo_code} object.
 #'
-#' @seealso \code{\link{hlt_*}}
+#' @seealso \code{\link{hlt_*}}, \code{\link{create_demo}}
 #'
 #' @examples
 #'
@@ -34,6 +34,19 @@
 #' @export
 demo_code <- function(.code_string, eval_here = TRUE) {
 
+  as_expr <- rlang::enexpr(.code_string)
+
+  if (!is.character(as_expr)) {
+
+    .code_string <- deparse(.code_string) %>%
+      str_remove("^\\{") %>%
+      str_remove("\\}$")
+
+    is_expr <- TRUE
+
+  }
+
+
   .code_string <- str_trim(.code_string)
 
   print_string <- .code_string %>%
@@ -41,27 +54,26 @@ demo_code <- function(.code_string, eval_here = TRUE) {
     str_replace_all("\n", "<br>") %>%
     txt_tocode()
 
-  new_demo_code <- evaluate::evaluate(str_trim(.code_string))
+  new_demo_code <- evaluate::evaluate(.code_string)
 
   is_output <- purrr::map(new_demo_code, class) != "source"
 
-  # If evaluating code on the spot, save sources.
-  # If not, blank out sources.
-  if (eval_here) {
+  new_demo_code <- new_demo_code[is_output]
+  attributes(new_demo_code) <- NULL
 
-    sources <- unlist(new_demo_code[!is_output])
+  attr(new_demo_code, "class") <- "demo_code"
+
+  attr(new_demo_code, "print_string") <- print_string
+
+  if (is_expr) {
+
+      attr(new_demo_code, "origin") <- "direct-expression"
 
   } else {
 
-    sources <- list()
+      attr(new_demo_code, "origin") <- "direct-string"
 
   }
-
-  new_demo_code <- new_demo_code[is_output]
-
-  attr(new_demo_code, "print_string") <- print_string
-  attr(new_demo_code, "sources") <- sources
-  attr(new_demo_code, "class") <- "demo_code"
 
   return(new_demo_code)
 
@@ -72,17 +84,6 @@ demo_code <- function(.code_string, eval_here = TRUE) {
 
 #' @export
 knit_print.demo_code <- function(x, ...) {
-
-  #x$wrapped <- map(x$evaluations, ~map_if(.x, length(.x) > 1, function(val) knitr:::wrap(val, ...) %>% str_c(collapse = "")))
-
-
-  # x$wrapped <- map(x$evaluations, function(val) if (length(val) > 2) knitr:::wrap(val[[2]], ...))
-  #
-  # to_print <- paste(unlist(x$print_string), unlist(x$wrapped)) %>% str_c(collapse = " ")
-  #
-  # asis_output(to_print)
-
-  #to_print <- str_c(to_print, collapse = "<br>")
 
   if (length(x) > 0) {
 
@@ -101,13 +102,18 @@ knit_print.demo_code <- function(x, ...) {
 
 #' S3 method for printing a \code{demo_code}
 #'
-#' Print results of evaluating sources.  Do NOT print any extra \code{demo_code} object info.
+#' Prints nothing, \code{demo_code} objects should be seen and not heard.
+#'
+#' If the \code{demo_code} object was created by inputting a string, we should run that code.
 #'
 #' @export
 
 print.demo_code <- function(x, ...) {
 
-  #print(attr(x, "sources"))
-  map(attr(x, "sources"), scope_run_print)
+  # if code is being supplied as an input object,
+
+  if (stringr::str_detect(attr(x, "origin"), "direct")) {
+
+    scope_run_print(x
 
 }

@@ -25,6 +25,7 @@ Imports:
     stringr,
     knitr,
     ggplot2,
-    diffobj
+    diffobj,
+    rstudioapi
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
