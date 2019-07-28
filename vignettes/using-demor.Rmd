@@ -38,7 +38,7 @@ codestring <- "mean(iris$Sepal.Length)"
 
 hlt_funs(codestring)
 
-hlt_vars(codestring)
+hlt_args(codestring)
 
 hlt_specific(codestring, "iris", color = "blue")
 ```
