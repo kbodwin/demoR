@@ -2,12 +2,12 @@
 #'
 #' \code{demo_code} objects are evaluated R code, returned from \code{evaluate::evaluate}, with an attached attribute called \code{print_string} which sets up fancy formatting for knitting.
 #'
-#' @param .code_string A string containing executable R code.
+#' @param .code_string A string containing executable R code OR a valid expression that will be converted to a string via \code{deparse()}
 #' @param eval_here A boolean specifying whether the code should be immediately evaluated, in addition to creating the \code{demo_code} object. (Defaults to \code{TRUE})
 #'
 #' @return A \code{demo_code} object.
 #'
-#' @seealso \code{\link{hlt_*}}
+#' @seealso \code{\link{hlt_*}}, \code{\link{create_demo}}
 #'
 #' @examples
 #'
@@ -34,6 +34,19 @@
 #' @export
 demo_code <- function(.code_string, eval_here = TRUE) {
 
+  as_expr <- rlang::enexpr(.code_string)
+
+  if (!is.character(as_expr)) {
+
+    .code_string <- deparse(.code_string) %>%
+      str_remove("^\\{") %>%
+      str_remove("\\}$")
+
+    is_expr <- TRUE
+
+  }
+
+
   .code_string <- str_trim(.code_string)
 
   print_string <- .code_string %>%
@@ -50,6 +63,16 @@ demo_code <- function(.code_string, eval_here = TRUE) {
 
   attr(new_demo_code, "print_string") <- print_string
   attr(new_demo_code, "class") <- "demo_code"
+
+  if (is_expr) {
+
+      attr(new_demo_code, "origin") <- "direct-expression"
+
+  } else {
+
+      attr(new_demo_code, "origin") <- "direct-string"
+
+  }
 
   return(new_demo_code)
 

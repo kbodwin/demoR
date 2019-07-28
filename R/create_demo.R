@@ -1,12 +1,14 @@
 #' Builds a demo_code object from a code chunk
 #'
-#' This function reads the source code from a given code chunk that has the value \code{label} set to the \code{demo} option; i.e., \code{```{r, demo = label}}.
+#' This function reads the source code from a given code chunk that has the value \code{label} set to the \code{demo} option; i.e., \code{{r, demo = label}}.
 #'
 #' When run directly in a source file, \code{create_demo()} reads the text of the active file and extracts the relevant string of source code.  (Important: this only works in RStudio!)
 #'
 #' When run during the \code{knitr::knit()} process, \code{create_demo()} pulls the relevant chunk source during \code{knitr::knit_hooks$set("source").}
 #'
-#' @return An object of class \link{\code{demo_code}}
+#' @param label creates demo code object from a
+#'
+#' @return An object of class \code{\link{demo_code}}
 #'
 #' @importFrom rstudioapi isAvailable getSourceEditorContext
 #'
@@ -14,6 +16,7 @@
 create_demo <- function(label) {
 
   # If RStudio is open, get source from current editor
+  # If in knitr, use labelled chunk source
 
   if (isAvailable()) {
 
@@ -31,15 +34,12 @@ create_demo <- function(label) {
     sources <- ed$contents
 
     new_demo_code <- demo_code(code_from_editor(sources, label))
+    attr(new_demo_code, "origin") <- "chunk-active"
 
   } else {
 
-  # Otherwise, hopefully we are in knitr.  Check for input file.
-
-    #sources <- readLines(input2, encoding = 'UTF-8', warn = FALSE)
-    #sources <- sources %>% str_split("\n")
-
     sources <- get(label, envir = .GlobalEnv)
+
     if (is.null(sources)) {
 
       stop(paste0("Error: No demo chunk with label '", label, "'"))
@@ -47,6 +47,7 @@ create_demo <- function(label) {
     } else {
 
       new_demo_code <- demo_code(code_from_hook(sources))
+      attr(new_demo_code, "origin") <- "chunk-knit"
 
     }
 
