@@ -1,3 +1,13 @@
+#' Builds a demo_code object from a code chunk
+#'
+#' This function reads the source code from a given code chunk that has the value \code{label} set to the \code{demo} option; i.e., \code{```{r, demo = label}}.
+#'
+#' When run directly in a source file, \code{create_demo()} reads the text of the active file and extracts the relevant string of source code.  (Important: this only works in RStudio!)
+#'
+#' When run during the \code{knitr::knit()} process, \code{create_demo()} pulls the relevant chunk source during \code{knitr::knit_hooks$set("source").}
+#'
+#' @return An object of class \link{\code{demo_code}}
+#'
 #' @importFrom rstudioapi isAvailable getSourceEditorContext
 #'
 #' @export
@@ -47,6 +57,10 @@ create_demo <- function(label) {
 
 }
 
+#' Converts raw editor text to a string of code
+#'
+#' Raw editor text has been taken from an active RStudio session via \code{rstudioapi::getSourceEditorContext()}.  Chunk delimiters and html is removed, all formatting is otherwise perserved.
+#'
 #' @importFrom stringr str_c str_which str_trim
 code_from_editor <- function(.contents, label) {
 
@@ -82,9 +96,12 @@ code_from_editor <- function(.contents, label) {
 
 }
 
+#' Converts raw chunk to a string of code
+#'
+#' Raw chunk string has been pulled from within the \code{"source"} hook using \code{knitr::knit_hooks$get()}.  Backticks and trailing/leading lines are stripped, all formatting is otherwise perserved.
+#'
+#' @import stringr
 code_from_hook <- function(.chunk) {
-
-  .chunk <- "\n\n```r\nthing <-              1:10\n\n    plot(thing)  #commenting\n```\n\n<img src=\"test_demo_chunks_files/figure-html/unnamed-chunk-3-1.png\" width=\"672\" />\n\n```r\n#I am a comment\n```\n\n"
 
   chunk_text <- .chunk %>%
     str_split("\\`\\`\\`r?") %>%
