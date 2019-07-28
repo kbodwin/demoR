@@ -29,7 +29,7 @@ knit_hooks$set(chunk = function(x, options) {
 })
 ```
 
-```{r, demo = "how_to_plot", include = FALSE}
+```{r, demo = "how_to_plot2", include = FALSE}
 
 thing <-              1:10
 
@@ -73,7 +73,7 @@ create_demo("how_to_plot") %>%
 Knitted Output:
 
 ```{r, echo = FALSE}
-create_demo("how_to_plot") %>% 
+bob <- create_demo("how_to_plot2") %>% 
   hlt_funs() %>% 
   hlt_regexp("#[^\n]*")
 ```
