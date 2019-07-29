@@ -4,7 +4,7 @@
 #'
 #' @param .code_string A string containing runnable R code.
 #'
-#' @returns Nothing; side effects from \code{print()} only.
+#' @return Nothing; side effects from \code{print()} only.
 #'
 scope_run_print <- function(.code_string) {
 
@@ -27,3 +27,27 @@ scope_run_print <- function(.code_string) {
   }
 
 }
+
+#' Runs code from string, in parent environment
+#'
+#' Shortcut function to rescope a code string and then run (but not print).  Looks for object assignments of the form \code{foo <-} and rescopes to \code{foo <<-}, then evaluates code string.
+#'
+#' @param .code_string A string containing runnable R code.
+#'
+#' @return Nothing; side effects in environment only.
+#'
+scope_and_run <- function(.code_string) {
+
+
+  # Rescope and run if an assignment is involved.
+  if (stringr::str_detect(.code_string, "^[^\\s]+\\s*\\<\\-")) {
+
+    .code_string %>%
+      str_replace("(?!=\\<)\\<\\-", "<<-") %>%
+      parse(text = .) %>%
+      eval()
+
+  }
+
+}
+

@@ -2,9 +2,27 @@
 % Please edit documentation in R/highlight.R
 \name{hlt_regexp}
 \alias{hlt_regexp}
+\alias{hlt_quick}
+\alias{hlt_all}
+\alias{hlt_fixed}
+\alias{hlt_args}
+\alias{hlt_funs}
+\alias{hlt_input_vals}
 \title{Highlights parts of a string}
 \usage{
 hlt_regexp(.string, pattern, code = TRUE, ...)
+
+hlt_quick(.string, pattern, ...)
+
+hlt_all(.string, ...)
+
+hlt_fixed(.string, pattern, ...)
+
+hlt_args(.string, ...)
+
+hlt_funs(.string, ...)
+
+hlt_input_vals(.string, ...)
 }
 \arguments{
 \item{.string}{A string object}
@@ -17,6 +35,20 @@ hlt_regexp(.string, pattern, code = TRUE, ...)
 
 \item{hlt_color}{Color to highlight code with.  Defaults to}
 }
+\value{
+A string with formatting wrappers.
+}
 \description{
 \code{hlt_*} returns an string of R code with formatting wrappers (currently only html)
+}
+\examples{
+
+code_string <- "foo <- mean(1:10, na.rm = TRUE)"
+
+code_string \%>\% hlt_args()
+
+code_string \%>\% hlt_funs(color = "red")
+
+code_string \%>\% hlt_regexp("foo")
+
 }

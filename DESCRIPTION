@@ -1,5 +1,5 @@
 Package: demoR
-Title: Tools for presenting and teaching R code.
+Title: demoR: Tools for presenting and teaching R code.
 Version: 0.0.0.9000
 Authors@R: 
    c(person(given = "Kelly", 
@@ -10,7 +10,7 @@ Authors@R:
           family = "Glanz", 
           role = c("aut"))
     )
-Description: What the package does (one paragraph).
+Description: demoR facilitates easier formatting of R source code in a R Markdown-based presentation. The main goal of the package is to allow users to preserve their code creation process within code chunks, then to specifiy formatting details for the source code, such as highlighting of particular syntatical elements.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

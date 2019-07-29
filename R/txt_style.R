@@ -4,7 +4,7 @@
 #'
 #' \code{txt_*} are shortcuts for specific individual style options
 #'
-#' Warning: These are simple direct wrappers for strings only.  If you are working with \code{demo_code} objects, you should instead use \code{\link{hlt_*}}.
+#' Warning: These are simple direct wrappers for strings only.  If you are working with \code{demo_code} objects, you should instead use the \code{\link{highlight}} functions.
 #'
 #' @param x The string to be wrapped
 #' @param type The style of display, defaults to "html"  (currently nothing else is supported, sorry)
@@ -15,7 +15,7 @@
 #'
 #' @return A string containing \code{x} with html wrappers.
 #'
-#' @seealso \code{\link{hlt_*}}
+#' @seealso \code{\link{highlight}}
 #'
 #' @importFrom stringr str_c str_replace
 #'

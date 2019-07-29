@@ -7,7 +7,7 @@
 #'
 #' @return A \code{demo_code} object.
 #'
-#' @seealso \code{\link{hlt_*}}, \code{\link{create_demo}}
+#' @seealso \code{\link{highlight}}, \code{\link{create_demo}}
 #'
 #' @examples
 #'
@@ -30,22 +30,10 @@
 #' foo + 5
 #'
 #'
+#' @importFrom purrr quietly map
 #'
 #' @export
 demo_code <- function(.code_string, eval_here = TRUE) {
-
-  as_expr <- rlang::enexpr(.code_string)
-
-  if (!is.character(as_expr)) {
-
-    .code_string <- deparse(.code_string) %>%
-      str_remove("^\\{") %>%
-      str_remove("\\}$")
-
-    is_expr <- TRUE
-
-  }
-
 
   .code_string <- str_trim(.code_string)
 
@@ -54,7 +42,24 @@ demo_code <- function(.code_string, eval_here = TRUE) {
     str_replace_all("\n", "<br>") %>%
     txt_tocode()
 
-  new_demo_code <- evaluate::evaluate(.code_string)
+  new_demo_code <- evaluate::evaluate(.code_string, new_device = FALSE)
+
+
+  is_src <- map(new_demo_code, class) == "source"
+
+  good_srcs <- new_demo_code[is_src] %>% unlist()
+  good_srcs <- str_subset(good_srcs, "[^\\s]+")
+
+  # Scope and run it
+
+  if (eval_here) {
+
+    purrr::map(good_srcs,
+          ~quietly(scope_and_run)(.x))
+
+  }
+
+  new_demo_code <- new_demo_code[!is_src]
 
   attributes(new_demo_code) <- NULL
 
@@ -62,15 +67,10 @@ demo_code <- function(.code_string, eval_here = TRUE) {
 
   attr(new_demo_code, "print_string") <- print_string
 
-  if (is_expr) {
+  attr(new_demo_code, "orig_sources") <- good_srcs
 
-      attr(new_demo_code, "origin") <- "direct-expression"
+  attr(new_demo_code, "origin") <- "direct-string"
 
-  } else {
-
-      attr(new_demo_code, "origin") <- "direct-string"
-
-  }
 
   return(new_demo_code)
 
@@ -81,10 +81,6 @@ demo_code <- function(.code_string, eval_here = TRUE) {
 #'
 #' @export
 knit_print.demo_code <- function(x, ...) {
-
-  is_output <- purrr::map(x, class) != "source"
-
-  x <- x[is_output]
 
   if (length(x) > 0) {
 
@@ -112,12 +108,12 @@ print.demo_code <- function(x, ...) {
 
   # if code is being supplied as an input object, run things, with objects defined in global environment
 
-  if (stringr::str_detect(attr(x, "origin"), "direct")) {
+  # if (stringr::str_detect(attr(x, "origin"), "direct")) {
+  #
+  #   map(attr(x, "orig_sources"), ~print(eval(parse(text = .x))))
+  #
+  # }
 
-    is_src <- purrr::map(x, class) == "source"
-
-    purrr::map(x[is_src], scope_run_print)
-
-  }
+  x
 
 }

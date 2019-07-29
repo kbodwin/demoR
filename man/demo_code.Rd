@@ -7,7 +7,7 @@
 demo_code(.code_string, eval_here = TRUE)
 }
 \arguments{
-\item{.code_string}{A string containing executable R code.}
+\item{.code_string}{A string containing executable R code OR a valid expression that will be converted to a string via \code{deparse()}}
 
 \item{eval_here}{A boolean specifying whether the code should be immediately evaluated, in addition to creating the \code{demo_code} object. (Defaults to \code{TRUE})}
 }
@@ -38,8 +38,7 @@ demo_code('foo <- mean(1:10)')
 foo + 5
 
 
-
 }
 \seealso{
-\code{\link{hlt_*}}
+\code{\link{highlight}}, \code{\link{create_demo}}
 }

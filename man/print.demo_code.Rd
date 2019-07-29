@@ -7,5 +7,8 @@
 \method{print}{demo_code}(x, ...)
 }
 \description{
-Print results of evaluating sources.  Do NOT print any extra \code{demo_code} object info.
+Prints nothing; \code{demo_code} objects should be seen and not heard.
+}
+\details{
+If the \code{demo_code} object was created by inputting a string, we should run that code and print any output.s
 }

@@ -8,14 +8,35 @@
 #' @param hlt_color Color to highlight code with.  Defaults to
 #' @param ... Formatting options, passed to \code{\link{txt_style}}
 #'
+#' @return A string with formatting wrappers.
+#'
+#' @examples
+#'
+#' code_string <- "foo <- mean(1:10, na.rm = TRUE)"
+#'
+#' code_string %>% hlt_args()
+#'
+#' code_string %>% hlt_funs(color = "red")
+#'
+#' code_string %>% hlt_regexp("foo")
+#'
 #' @import stringr
-# #
-
+#'
+#' @rdname highlight
+#'
 #' @export
 hlt_regexp <- function(.string, pattern, code = TRUE, ...)  {
   UseMethod("hlt_regexp")
 }
 
+#' S3 method for \code{\link{demo_code}} objects
+#'
+#' Applies highlighting to the \code{print_string} attribute.
+#'
+#' @param x An object of class \code{\link{demo_code}}.
+#'
+#' @return An object of class \code{\link{demo_code}}.
+#'
 #' @export
 hlt_regexp.demo_code = function(x, ...) {
 
@@ -26,6 +47,7 @@ hlt_regexp.demo_code = function(x, ...) {
 
 }
 
+#' Default S3 method for \code{\link{hlt_regexp}}.
 #' @export
 hlt_regexp.default <- function(.string, pattern, code = TRUE, ...) {
   ## Matches regular expression of pattern inside of code string
@@ -60,6 +82,7 @@ hlt_regexp.default <- function(.string, pattern, code = TRUE, ...) {
   return(.string)
 }
 
+#' @rdname highlight
 #' @export
 hlt_quick <- function(.string, pattern, ...){
 
@@ -72,6 +95,7 @@ hlt_quick <- function(.string, pattern, ...){
   return(.string)
 }
 
+#' @rdname highlight
 #' @export
 hlt_all <- function(.string, ...)  {
   UseMethod("hlt_all")
@@ -106,7 +130,7 @@ hlt_all.default <- function(.string, ...) {
 
 }
 
-
+#' @rdname highlight
 #' @export
 hlt_fixed <- function(.string, pattern, ...) {
 
@@ -114,6 +138,7 @@ hlt_fixed <- function(.string, pattern, ...) {
 
 }
 
+#' @rdname highlight
 #' @export
 hlt_args <- function(.string, ...) {
 
@@ -127,6 +152,7 @@ hlt_args <- function(.string, ...) {
 
 }
 
+#' @rdname highlight
 #' @export
 hlt_funs <- function(.string, ...) {
 
@@ -138,6 +164,7 @@ hlt_funs <- function(.string, ...) {
 
 }
 
+#' @rdname highlight
 #' @export
 hlt_input_vals <- function(.string, ...) {
 
@@ -154,12 +181,4 @@ hlt_input_vals <- function(.string, ...) {
   .string %>%
     hlt_regexp(vars_regexp1, ...) %>%
     hlt_regexp(vars_regexp2, ...)
-}
-
-#' @export
-hlt_diff <- function(.string1, .string2, ...) {
-
-  #<script src="htmldiff.js"></script>
-  ## need a function for string differences
-
 }

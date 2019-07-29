@@ -116,4 +116,3 @@ code_from_hook <- function(.chunk) {
   return(chunk_text)
 }
 
-

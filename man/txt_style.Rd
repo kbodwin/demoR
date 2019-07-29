@@ -56,7 +56,7 @@ A string containing \code{x} with html wrappers.
 \details{
 \code{txt_*} are shortcuts for specific individual style options
 
-Warning: These are simple direct wrappers for strings only.  If you are working with \code{demo_code} objects, you should instead use \code{\link{hlt_*}}.
+Warning: These are simple direct wrappers for strings only.  If you are working with \code{demo_code} objects, you should instead use the \code{\link{highlight}} functions.
 }
 \examples{
 # General use
@@ -69,7 +69,8 @@ txt_color("I am blue.", color = "blue")
 
 # Code styling wrapper
 txt_tocode("I am code.")
+
 }
 \seealso{
-\code{\link{hlt_*}}
+\code{\link{highlight}}
 }
