@@ -117,3 +117,7 @@ print.demo_code <- function(x, ...) {
   x
 
 }
+
+#' For pkgdown
+#' @export
+replay_html.demo_code <- function(x, ...) ""
