@@ -37,13 +37,7 @@ demo_code <- function(.code_string, eval_here = TRUE) {
 
   .code_string <- str_trim(.code_string)
 
-  print_string <- .code_string %>%
-    str_trim() %>%
-    str_replace_all("\n", "<br>") %>%
-    txt_tocode()
-
-  new_demo_code <- evaluate::evaluate(.code_string, new_device = FALSE)
-
+  new_demo_code <- quietly(evaluate::evaluate)(.code_string)$res
 
   is_src <- map(new_demo_code, class) == "source"
 
@@ -59,7 +53,17 @@ demo_code <- function(.code_string, eval_here = TRUE) {
 
   }
 
-  new_demo_code <- new_demo_code[!is_src]
+  #new_demo_code <- new_demo_code[!is_src]
+
+  print_strings <- new_demo_code[is_src] %>% unlist() %>% str_replace_all("\n", "<br>")
+
+  if (!shatter) {
+
+    print_strings <- str_c(print_strings, collapse = "<br>")
+
+  }
+
+  print_strings <- txt_tocode(print_strings)
 
   attributes(new_demo_code) <- NULL
 
@@ -82,7 +86,9 @@ demo_code <- function(.code_string, eval_here = TRUE) {
 #' @export
 knit_print.demo_code <- function(x, ...) {
 
-  if (length(x) > 0) {
+  demo_eval = knitr::opts_current$get('demo.eval')
+
+  if (length(x) > 0 && demo_eval) {
 
     output_string <- purrr::map(x, function(val) knitr:::wrap(val, ...)) %>%
       str_c(collapse = " ")
@@ -114,7 +120,7 @@ print.demo_code <- function(x, ...) {
   #
   # }
 
-  x
+ # x
 
 }
 

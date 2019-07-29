@@ -5,35 +5,18 @@ output: html_document
 ---
 
 ```{r}
+#knitr::opts_chunk$set(echo = FALSE)
 library(demoR)
-```
-
-
-
-
-
-
-
-```{r, include = FALSE}
 library(tidyverse)
 library(knitr)
-
-hook_chunk <- knit_hooks$get('chunk')
-
-knit_hooks$set(chunk = function(x, options) {
-  if (!is.null(options$demo)) {
-    assign(options$demo, x, envir = .GlobalEnv)
-  } 
-  
-  hook_chunk(x, options)
-})
 ```
 
-```{r, demo = "how_to_plot2", include = FALSE}
+
+```{r, demo = "how_to_plot2", include = FALSE, eval = FALSE}
 
 thing <-              1:10
 
-    plot(thing)  #commenting
+    ggplot(, aes(x =thing)) + geom_histogram()  #commenting
     
     
 #I am a comment
@@ -73,13 +56,23 @@ create_demo("how_to_plot") %>%
 Knitted Output:
 
 ```{r, echo = FALSE}
-bob <- create_demo("how_to_plot2") %>% 
-  hlt_funs() %>% 
-  hlt_regexp("#[^\n]*")
+demo_chunk("how_to_plot2") %>% 
+  hlt_funs()
 ```
 
 
 There is also a direct-from-string option, which is a good way to demonstrate broken code:
+
+
+```{r, error = TRUE, demo.eval = FALSE}
+demo_code('
+
+thing <- 1:10
+
+plot(thing)
+
+') %>% hlt_funs()
+```
 
 ```{r, error = TRUE}
 demo_code('
@@ -88,7 +81,7 @@ thing <- 1:10
 
 plot(thing
 
-') %>% hlt_funs()
+', eval_here = FALSE) %>% hlt_funs()
 ```
 
 
