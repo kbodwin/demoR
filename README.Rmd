@@ -16,16 +16,17 @@ options(tibble.print_min = 5, tibble.print_max = 5)
 
 # demoR
 
-<!-- badges: start -->
-[![CRAN status](https://www.r-pkg.org/badges/version/demoR)](https://cran.r-project.org/package=demoR)
+<!-- badges: start
+[![CRAN status](https://www.r-pkg.org/badges/version/demoR)](https://cran.r-project.org/package=demoR)-->
+
 
 ## Overview
 
 demoR is a set of tools for formatting `R` code for presentations, teaching demonstrations, and much more:
 
-* The `hlt_*()` functions add text display formatting to printed code.
+* The `demo_*()` functions prepare your source code to be both evaluated and displayed by `knitr::knit()`.
 
-* The `demo_*()` functions print and run the code.
+* The `hlt_*()` functions add text display formatting to printed code.
 
 These combine naturally within code chunks in R Markdown files via code chunk options. You can learn more about them in `vignette("demoR")`.
 
