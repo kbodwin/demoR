@@ -3,6 +3,8 @@
 demoR
 =====
 
+To get started, please refer to [this vignette](https://web.calpoly.edu/~kbodwin/demoR/articles/demoR.html).
+
 <!-- badges: start
 [![CRAN status](https://www.r-pkg.org/badges/version/demoR)](https://cran.r-project.org/package=demoR)-->
 Overview
