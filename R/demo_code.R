@@ -4,6 +4,7 @@
 #'
 #' @param .code_string A string containing executable R code OR a valid expression that will be converted to a string via \code{deparse()}
 #' @param eval_here A boolean specifying whether the code should be immediately evaluated, in addition to creating the \code{demo_code} object. (Defaults to \code{TRUE})
+#' @param shatter
 #'
 #' @return A \code{demo_code} object.
 #'
@@ -33,7 +34,7 @@
 #' @importFrom purrr quietly map
 #'
 #' @export
-demo_code <- function(.code_string, eval_here = TRUE) {
+demo_code <- function(.code_string, eval_here = TRUE, shatter = FALSE) {
 
   .code_string <- str_trim(.code_string)
 
@@ -69,7 +70,7 @@ demo_code <- function(.code_string, eval_here = TRUE) {
 
   attr(new_demo_code, "class") <- "demo_code"
 
-  attr(new_demo_code, "print_string") <- print_string
+  attr(new_demo_code, "print_string") <- print_strings
 
   attr(new_demo_code, "orig_sources") <- good_srcs
 
@@ -86,9 +87,9 @@ demo_code <- function(.code_string, eval_here = TRUE) {
 #' @export
 knit_print.demo_code <- function(x, ...) {
 
-  demo_eval = knitr::opts_current$get('demo.eval')
+  #demo_eval = knitr::opts_current$get('demo.eval')
 
-  if (length(x) > 0 && demo_eval) {
+  if (length(x) > 0) {
 
     output_string <- purrr::map(x, function(val) knitr:::wrap(val, ...)) %>%
       str_c(collapse = " ")

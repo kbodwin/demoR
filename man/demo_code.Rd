@@ -4,12 +4,14 @@
 \alias{demo_code}
 \title{Creates an object of the class \code{demo_code}}
 \usage{
-demo_code(.code_string, eval_here = TRUE)
+demo_code(.code_string, eval_here = TRUE, shatter = FALSE)
 }
 \arguments{
 \item{.code_string}{A string containing executable R code OR a valid expression that will be converted to a string via \code{deparse()}}
 
 \item{eval_here}{A boolean specifying whether the code should be immediately evaluated, in addition to creating the \code{demo_code} object. (Defaults to \code{TRUE})}
+
+\item{shatter}{}
 }
 \value{
 A \code{demo_code} object.

@@ -10,46 +10,19 @@ output: html_document
 library(demoR)
 library(ggplot2)
 
-#source("../R/highlight.R")
-
-
 ```
 
-```{r}
 
+```{r}
 demo_code('
-  ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
-    geom_point()
+  ggplot(iris, aes(x = Petal.Length, y = Sepal.Length, color = Species)) +
+geom_point()
 ') %>%
-  hlt_args(color = "green") %>%
-  hlt_funs(color = "blue") %>%
-  hlt_input_vals(color = "red") %>%
-  hlt_regexp("Sepal.Length")
-
-
-```
-
-```{r, echo = TRUE}
-
-demo_code('foo <- mean(1:10)') %>% hlt_input_vals(color = "red")
-
-foo + 5
-
-demo_code('foo + 7') %>% hlt_all()
+  mask("x", background = "yellow") %>%
+  mask("Species", background = "yellow")
 ```
 
 
-```{r}
-testfn <- function(x) {
-  
-  dance_recital(x, evaluate = FALSE)
-  
-}
-
-testfn("iris %>%\n    mutate(\n      Sepal.Size = Sepal.Length + Sepal.Width\n      ) %>%\n    group_by(Species) %>%\n    summarize(mean(Sepal.Length))")
-
-testfn("plot(1:10)")
-```
 
 
 
