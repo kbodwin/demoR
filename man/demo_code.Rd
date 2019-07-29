@@ -40,5 +40,5 @@ foo + 5
 
 }
 \seealso{
-\code{\link{highlight}}, \code{\link{create_demo}}
+\code{\link{highlight}}, \code{\link{demo_chunk}}
 }

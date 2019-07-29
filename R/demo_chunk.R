@@ -1,10 +1,10 @@
-#' Builds a \code{\link{demo_cod}} object from a code chunk
+#' Builds a \code{\link{demo_code}} object from a code chunk
 #'
 #' This function reads the source code from a given code chunk that has the value \code{label} set to the \code{demo} option; i.e., \code{{r, demo = "my_label"}}.
 #'
-#' When run directly in a source file, \code{create_demo()} reads the text of the active file and extracts the relevant string of source code.  (Important: this only works in RStudio!)
+#' When run directly in a source file, \code{demo_chunk()} reads the text of the active file and extracts the relevant string of source code from the labelled chunk.  (Important: this only works in RStudio!)
 #'
-#' When run during the \code{knitr::knit()} process, \code{create_demo()} pulls the relevant chunk source during \code{knitr::knit_hooks$set("source").}
+#' When run during the \code{knitr::knit()} process, \code{demo_chunk()} pulls the relevant chunk source during \code{knitr::knit_hooks$set("source").}
 #'
 #' @param label String that gives the name of the label used in a chunk option.
 #'
@@ -13,7 +13,7 @@
 #' @importFrom rstudioapi isAvailable getSourceEditorContext
 #'
 #' @export
-create_demo <- function(label) {
+demo_chunk <- function(label) {
 
   # If RStudio is open, get source from current editor
   # If in knitr, use labelled chunk source

@@ -7,7 +7,7 @@
 #'
 #' @return A \code{demo_code} object.
 #'
-#' @seealso \code{\link{highlight}}, \code{\link{create_demo}}
+#' @seealso \code{\link{highlight}}, \code{\link{demo_chunk}}
 #'
 #' @examples
 #'

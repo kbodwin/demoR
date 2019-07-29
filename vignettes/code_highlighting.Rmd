@@ -85,7 +85,7 @@ Then, you can reference the object by label to automatically create a `demo_code
 
 ```{r, echo = FALSE}`r ''`
 
-create_demo("how_to_pipe") %>% hlt_fixed("%>%")
+demo_chunk("how_to_pipe") %>% hlt_fixed("%>%")
   
 ```
 
@@ -97,7 +97,7 @@ Note that the `create_demo` step should be in a separate chunk from the code you
 With the above two code chunks in our source file, the resulting knitted output looks like this:
 
 ```{r, echo = FALSE}
- create_demo("how_to_pipe") %>% 
+demo_chunk("how_to_pipe") %>% 
   hlt_fixed("%>%") 
 ```
 
