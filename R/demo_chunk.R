@@ -6,14 +6,19 @@
 #'
 #' When run during the \code{knitr::knit()} process, \code{demo_chunk()} pulls the relevant chunk source during \code{knitr::knit_hooks$set("source").}
 #'
-#' @param label String that gives the name of the label used in a chunk option.
+#' @param label String that gives the name of the label used in a chunk option. If left blank, current chunk is used.
 #'
 #' @return An object of class \code{\link{demo_code}}
 #'
 #' @importFrom rstudioapi isAvailable getSourceEditorContext
+#' @importFrom stringr str_c str_trim
 #'
 #' @export
 demo_chunk <- function(label) {
+
+  try_chunk <- safely(knitr:::knit_code$get)("how-to-plot")
+
+  return(try_chunk)
 
   # If RStudio is open, get source from current editor
   # If in knitr, use labelled chunk source
@@ -38,18 +43,23 @@ demo_chunk <- function(label) {
 
   } else {
 
-    sources <- get(label, envir = .GlobalEnv)
+    try_chunk <- safely(knitr:::knit_code$get)(label)
 
-    if (is.null(sources)) {
+    if (is.null(try_chunk$error)) {
 
-      stop(paste0("Error: No demo chunk with label '", label, "'"))
+      sources <- try_chunk$result
 
     } else {
 
-      new_demo_code <- demo_code(code_from_hook(sources))
-      attr(new_demo_code, "origin") <- "chunk-knit"
+      stop(paste0("Error: No chunk found with label '", label, "'"))
 
     }
+
+    sources <- sources %>% str_c(collapse = "\n") %>% str_trim()
+
+
+    new_demo_code <- demo_code(sources)
+    attr(new_demo_code, "origin") <- "chunk-knit"
 
 
   }
@@ -67,19 +77,18 @@ code_from_editor <- function(.contents, label) {
 
 
   # Find the start of the desired demo chunk
-  chunk_regex <- paste0('\\`\\`\\`\\{r', '.*', ',demo=\\"', label, '\\".*\\}')
+  chunk_regex <- paste0('\\`\\`\\`\\{r ', label, '(\\}|(,.*\\}))$')
 
   start_chunk <- .contents %>%
-    str_remove_all("\\s+") %>%
     str_which(chunk_regex)
 
   if (length(start_chunk) == 0) {
 
-    stop(paste0("Error: No demo chunk with label '", label, "'"))
+    stop(paste0("Error: No chunk found with label '", label, "'"))
 
   } else if (length(start_chunk) > 1) {
 
-    stop(paste0("Error: Duplicate demo chunk label '", label, "'"))
+    stop(paste0("Error: Duplicate chunk label '", label, "'"))
 
   }
 
@@ -95,24 +104,5 @@ code_from_editor <- function(.contents, label) {
 
   return(chunk_text)
 
-}
-
-#' Converts raw chunk to a string of code
-#'
-#' Raw chunk string has been pulled from within the \code{"source"} hook using \code{knitr::knit_hooks$get()}.  Backticks and trailing/leading lines are stripped, all formatting is otherwise perserved.
-#'
-#' @import stringr
-code_from_hook <- function(.chunk) {
-
-  chunk_text <- .chunk %>%
-    str_split("\\`\\`\\`r?") %>%
-    unlist() %>%
-    str_subset("\\s*\\<[^\\<\\>]*\\>", negate = TRUE) %>%
-    str_subset("[^\\s]") %>%
-    str_c(collapse = "") %>%
-    str_remove("^\n+") %>%
-    str_remove("\n+$")
-
-  return(chunk_text)
 }
 

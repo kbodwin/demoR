@@ -33,7 +33,7 @@
 #' @importFrom purrr quietly map
 #'
 #' @export
-demo_code <- function(.code_string, eval_here = TRUE) {
+demo_code <- function(.code_string, eval_here = TRUE, shatter = TRUE) {
 
   .code_string <- str_trim(.code_string)
 
@@ -55,7 +55,7 @@ demo_code <- function(.code_string, eval_here = TRUE) {
 
   #new_demo_code <- new_demo_code[!is_src]
 
-  print_strings <- new_demo_code[is_src] %>% unlist() %>% str_replace_all("\n", "<br>")
+  print_strings <- new_demo_code[is_src] %>% unlist()
 
   if (!shatter) {
 
@@ -63,13 +63,16 @@ demo_code <- function(.code_string, eval_here = TRUE) {
 
   }
 
-  print_strings <- txt_tocode(print_strings)
+  print_strings <- print_strings %>%
+    str_subset("[^\\s]+") %>%
+      str_replace_all("\n", "<br>") %>%
+      txt_tocode()
 
   attributes(new_demo_code) <- NULL
 
   attr(new_demo_code, "class") <- "demo_code"
 
-  attr(new_demo_code, "print_string") <- print_string
+  attr(new_demo_code, "print_string") <- print_strings
 
   attr(new_demo_code, "orig_sources") <- good_srcs
 

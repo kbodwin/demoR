@@ -12,7 +12,7 @@ library(knitr)
 ```
 
 
-```{r, demo = "how_to_plot2", include = FALSE, eval = FALSE}
+```{r how-to-plot, eval = FALSE, echo = FALSE}
 
 thing <-              1:10
 
@@ -27,7 +27,7 @@ What the first chunk looks like:
 
 ````
 
-```{r, include = FALSE, demo = "how_to_plot"}`r ''`
+```{r how-to-plot, include = FALSE}`r ''`
 
 thing <-              1:10
 
@@ -56,15 +56,18 @@ create_demo("how_to_plot") %>%
 Knitted Output:
 
 ```{r, echo = FALSE}
-demo_chunk("how_to_plot2") %>% 
-  hlt_funs()
+
+demo_chunk("how-to-plot")
+
+
+
 ```
 
 
 There is also a direct-from-string option, which is a good way to demonstrate broken code:
 
 
-```{r, error = TRUE, demo.eval = FALSE}
+```{r, error = TRUE}
 demo_code('
 
 thing <- 1:10
