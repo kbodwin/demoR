@@ -18,8 +18,8 @@ demo_code('
   ggplot(iris, aes(x = Petal.Length, y = Sepal.Length, color = Species)) +
 geom_point()
 ') %>%
-  mask("x", background = "yellow") %>%
-  mask("Species", background = "yellow")
+  mask("point", background = "pink") %>%
+  mask("Species", background = "pink")
 ```
 
 
