@@ -22,6 +22,21 @@ geom_point()
   mask("Species", background = "pink")
 ```
 
+```{r plot1}
+plot(1:10)
+```
+
+```{r}
+demo_chunk("plot1") %>% hlt_funs()
+```
+
+```{r plot2, demo = TRUE}
+plot(1:10) #<< hlt_funs()
+```
+
+
+
+
 
 
 

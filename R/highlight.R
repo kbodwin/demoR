@@ -4,7 +4,6 @@
 #'
 #' @param .string A string object
 #' @param pattern A regular expression to match
-#' @param code Should this string be displayed in R code format?
 #' @param hlt_color Color to highlight code with.  Defaults to
 #' @param ... Formatting options, passed to \code{\link{txt_style}}
 #'
@@ -25,7 +24,7 @@
 #' @rdname highlight
 #'
 #' @export
-hlt_regexp <- function(.string, pattern, code = TRUE, ...)  {
+hlt_regexp <- function(.string, pattern, ...)  {
   UseMethod("hlt_regexp")
 }
 
@@ -73,11 +72,6 @@ hlt_regexp.default <- function(.string, pattern, code = TRUE, ...) {
   .string <- purrr::map_if(split_string, !which_tags, function(x) hlt_quick(x, pattern, ...)) %>%
     unlist() %>%
     str_c(collapse = "")
-
-  # wrap in code tags if needed
-  if (code && !str_detect(.string, fixed("<code>"))) {
-    .string <- txt_tocode(.string)
-  }
 
   return(.string)
 }
@@ -181,28 +175,6 @@ hlt_input_vals <- function(.string, ...) {
   .string %>%
     hlt_regexp(vars_regexp1, ...) %>%
     hlt_regexp(vars_regexp2, ...)
-}
-
-
-#' Blanks out part of the code
-#'
-#' @param .string A string object
-#' @param pattern A regular expression to match
-#' @param ... Further formatting options, passed to \code{\link{txt_style}}
-#'
-#' @export
-mask <- function(.string, pattern, ...) {
-
-  hlt_regexp(.string, fixed(pattern), color = "transparent", ...)
-
-}
-
-#' @rdname mask
-#' @export
-mask_regexp <- function(.string, pattern, ...) {
-
-  hlt_regexp(.string, pattern, color = "transparent", ...)
-
 }
 
 
