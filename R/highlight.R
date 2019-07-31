@@ -79,11 +79,6 @@ hlt_regexp.default <- function(.string, pattern, code = TRUE, ...) {
     unlist() %>%
     str_c(collapse = "")
 
-  # wrap in code tags if needed
-  # if (code && !str_detect(.string, fixed("<code>"))) {
-  #   .string <- txt_tocode(.string)
-  # }
-
   return(.string)
 }
 
