@@ -84,6 +84,8 @@ demo_code <- function(.code_string, eval = TRUE, shatter = TRUE) {
 
   attr(new_demo_code, "eval") <- eval
 
+  attr(new_demo_code, "doc_type") <- rmarkdown::all_output_formats(knitr::current_input())
+
   return(new_demo_code)
 
 }
@@ -100,7 +102,7 @@ knit_print.demo_code <- function(x, ...) {
 
   x[-where_sources] <- purrr::map(x[-where_sources], function(val) knitr:::wrap(val, ...))
 
-  x[where_sources] <- purrr::map(x[where_sources], function(val) wrap_source(val, ...))
+  x[where_sources] <- purrr::map(x[where_sources], function(val) wrap_source(val, attr(x, "doc_type"), ...))
 
   x <- x %>%
       str_c(collapse = " ")
@@ -113,9 +115,28 @@ knit_print.demo_code <- function(x, ...) {
 }
 
 #' Helper for \code{knit_print.demo_code}
-wrap_source <- function(x, ...) {
+wrap_source <- function(x, doc_type, ...) {
 
-  txt_tocode(x)
+  if (doc_type == "html_document") {
+
+    x <- paste0("<pre class='prettyprint'>", txt_tocode(x), "</pre>")
+
+  } else if (doc_type == "ioslides_presentation") {
+
+    x <- paste0("<pre class='prettyprint lang-r'>", txt_tocode(x), "</pre>")
+
+  } else {
+
+    x <- paste0("<pre><code class='language-r'>", txt_tocode(x), "</code></pre>")
+
+  }
+  # } else if (doc_type == "xaringan::moon_reader"){
+  #
+  #   x <- paste0("<pre><code class='language-r'>", x, "</code></pre>")
+  #
+  # }
+
+  return(x)
 
 }
 
@@ -130,7 +151,7 @@ print.demo_code <- function(x, ...) {
 
   # if code is being supplied as an input object, run things, with objects defined in global environment
 
-  if (attr(x, "eval")) {
+  if (attr(x, "eval") && !isTRUE(knitr::getOption('knitr.in.progress'))) {
 
     where_sources <- attr(x, "where_sources")
 
