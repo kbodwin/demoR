@@ -29,29 +29,29 @@
 #'
 #' foo + 5
 #'
-#'
 #' @importFrom stringr str_trim str_detect str_replace_all
+#' @importFrom purrr map map_lgl quietly
 #'
 #' @export
 demo_code <- function(.code_string, eval = TRUE, shatter = TRUE) {
 
   .code_string <- str_trim(.code_string)
 
-  new_demo_code <- purrr::quietly(evaluate::evaluate)(.code_string)$result
+  new_demo_code <- quietly(evaluate::evaluate)(.code_string)$result
 
-  valid <- str_detect(unlist(new_demo_code), "[^\\s]+")
+  valid <- map_lgl(new_demo_code, ~ (class(.x) != "source") || str_detect(.x, "[^\\s]+"))
 
   new_demo_code <- new_demo_code[valid]
 
-  is_src <- purrr::map(new_demo_code, class) == "source"
+  is_src <- map(new_demo_code, class) == "source"
 
 
   # Scope and run it
 
   if (eval) {
 
-    purrr::map(new_demo_code[is_src],
-          ~purrr::quietly(scope_and_run)(.x))
+    map(new_demo_code[is_src],
+          ~quietly(scope_and_run)(.x))
 
   }
 
@@ -86,7 +86,6 @@ demo_code <- function(.code_string, eval = TRUE, shatter = TRUE) {
 
   attr(new_demo_code, "eval") <- eval
 
-
   return(new_demo_code)
 
 }
@@ -99,25 +98,27 @@ demo_code <- function(.code_string, eval = TRUE, shatter = TRUE) {
 #' @export
 knit_print.demo_code <- function(x, ...) {
 
-  demo_eval = knitr::opts_current$get('demo.eval')
-
   where_sources <- attr(x, "where_sources")
 
   x[-where_sources] <- purrr::map(x[-where_sources], function(val) knitr:::wrap(val, ...))
 
   x[where_sources] <- purrr::map(x[where_sources], function(val) wrap_source(val, ...))
 
-  x %>%
-      str_c(collapse = " ") %>%
-      knitr::asis_output()
+  x <- x %>%
+      str_c(collapse = " ")
+
+
+  knitr::asis_output(x)
+
+  #knitr::knit_print(unclass(x))
 
 }
 
 #' Helper for \code{knit_print.demo_code}
 wrap_source <- function(x, ...) {
 
-  attr(x, "class") <- "source"
-  knitr:::wrap(x, ...)
+  txt_tocode(x)
+  #knitr::knit_hooks$get("source")(x, ...)
 
 }
 

@@ -102,36 +102,9 @@ hlt_quick <- function(.string, pattern, ...){
 
 #' @rdname highlight
 #' @export
-hlt_all <- function(.string, ...)  {
-  UseMethod("hlt_all")
-}
+hlt_all <- function(.string, ...) {
 
-#' @export
-hlt_all.demo_code = function(x, ...) {
-
-  code_string <- attr(x, "print_string")
-  attr(x, "print_string") <- hlt_all(code_string, ...)
-
-  return(x)
-
-}
-
-#' @export
-hlt_all.default <- function(.string, ...) {
-
-  start_rx = fixed("<pre class='prettyprint'><code>")
-  end_rx = fixed("</code></pre>")
-
-  split_string <- split_sandwiches(.string,
-    start_rx, end_rx)
-
-  which_tags <- str_detect(split_string, start_rx) | str_detect(split_string, end_rx)
-
-  .string <- purrr::map_if(split_string, !which_tags,
-                           function(x) hlt_quick(x, ".+", ...)) %>%
-    unlist() %>% str_c(collapse = "")
-
-  return(.string)
+  hlt.regexp(.string, ".*", ...)
 
 }
 

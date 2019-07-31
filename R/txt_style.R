@@ -138,6 +138,6 @@ txt_ul <- function(x) {
 #' @rdname txt_style
 txt_tocode <- function(x){
 
-  paste0("<pre class='prettyprint'><code>", x, "</code></pre>")
+  paste0("<code>", x, "</code>")
 
 }

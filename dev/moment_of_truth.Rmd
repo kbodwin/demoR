@@ -18,25 +18,26 @@ library(ggplot2)
 ```{r}
 
 
-bob <- demo_code('
+demo_code('
                  mean(1:10)
                  
                  print(1:10)') %>% hlt_funs()
 
-bob
 
 ```
 
-```{r plot1, include = FALSE}
-plot(1:10) 
+```{r plot, include = FALSE}
+thing <- 1:10
+
+mean(thing)
+
+plot(thing)
+
+
 ```
 
-```{r dc_plot1}
-demo_chunk("plot1")
-```
-
-```{r dc_plot1_noeval, demo.eval = FALSE}
-demo_chunk("plot1")
+```{r}
+demo_chunk("plot") %>% hlt_funs()
 ```
 
 

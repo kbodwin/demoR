@@ -37,7 +37,6 @@ demo_code('foo <- mean(1:10)')
 
 foo + 5
 
-
 }
 \seealso{
 \code{\link{highlight}}, \code{\link{demo_chunk}}
