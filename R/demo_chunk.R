@@ -10,59 +10,46 @@
 #'
 #' @return An object of class \code{\link{demo_code}}
 #'
-#' @importFrom rstudioapi isAvailable getSourceEditorContext
 #' @importFrom stringr str_c str_trim
 #'
 #' @export
 demo_chunk <- function(label) {
 
-  try_chunk <- safely(knitr:::knit_code$get)("how-to-plot")
+    sources = NULL
 
-  return(try_chunk)
+    try_chunk <- purrr::safely(knitr:::knit_code$get)(label)
 
-  # If RStudio is open, get source from current editor
-  # If in knitr, use labelled chunk source
+    if (is.null(try_chunk$error) && !is.null(try_chunk$result)) {
 
-  if (isAvailable()) {
+      sources <- try_chunk$result %>%
+        str_c(collapse = "\n") %>%
+        str_trim()
 
-    editorIsOpen <- tryCatch({
-      getSourceEditorContext()
-      TRUE
-    }, error = function(e) FALSE)
-    if (editorIsOpen) {
-      ed <- getSourceEditorContext()
+      new_demo_code <- demo_code(sources)
+      attr(new_demo_code, "origin") <- "chunk-knit"
+
+    } else if (requireNamespace("rstudioapi", quietly = TRUE) && rstudioapi::isAvailable()) {
+
+          editorIsOpen <- tryCatch({
+            rstudioapi::getSourceEditorContext()
+            TRUE
+          }, error = function(e) FALSE)
+
+          if (editorIsOpen) {
+            ed <- rstudioapi::getSourceEditorContext()
+            sources <- ed$contents
+
+            new_demo_code <- demo_code(code_from_editor(sources, label))
+            attr(new_demo_code, "origin") <- "chunk-active"
+          }
+
     }
-    else {
-      ed <- list(path = NA, contents = NA, selection = NA)
-    }
 
-    sources <- ed$contents
-
-    new_demo_code <- demo_code(code_from_editor(sources, label))
-    attr(new_demo_code, "origin") <- "chunk-active"
-
-  } else {
-
-    try_chunk <- safely(knitr:::knit_code$get)(label)
-
-    if (is.null(try_chunk$error)) {
-
-      sources <- try_chunk$result
-
-    } else {
+    if (is.null(sources)) {
 
       stop(paste0("Error: No chunk found with label '", label, "'"))
 
     }
-
-    sources <- sources %>% str_c(collapse = "\n") %>% str_trim()
-
-
-    new_demo_code <- demo_code(sources)
-    attr(new_demo_code, "origin") <- "chunk-knit"
-
-
-  }
 
   return(new_demo_code)
 

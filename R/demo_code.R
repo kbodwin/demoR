@@ -30,53 +30,61 @@
 #' foo + 5
 #'
 #'
-#' @importFrom purrr quietly map
+#' @importFrom stringr str_trim str_detect str_replace_all
 #'
 #' @export
-demo_code <- function(.code_string, eval_here = TRUE, shatter = TRUE) {
+demo_code <- function(.code_string, eval = TRUE, shatter = TRUE) {
 
   .code_string <- str_trim(.code_string)
 
-  new_demo_code <- quietly(evaluate::evaluate)(.code_string)$res
+  new_demo_code <- purrr::quietly(evaluate::evaluate)(.code_string)$result
 
-  is_src <- map(new_demo_code, class) == "source"
+  valid <- str_detect(unlist(new_demo_code), "[^\\s]+")
 
-  good_srcs <- new_demo_code[is_src] %>% unlist()
-  good_srcs <- str_subset(good_srcs, "[^\\s]+")
+  new_demo_code <- new_demo_code[valid]
+
+  is_src <- purrr::map(new_demo_code, class) == "source"
+
 
   # Scope and run it
 
-  if (eval_here) {
+  if (eval) {
 
-    purrr::map(good_srcs,
-          ~quietly(scope_and_run)(.x))
-
-  }
-
-  #new_demo_code <- new_demo_code[!is_src]
-
-  print_strings <- new_demo_code[is_src] %>% unlist()
-
-  if (!shatter) {
-
-    print_strings <- str_c(print_strings, collapse = "<br>")
+    purrr::map(new_demo_code[is_src],
+          ~purrr::quietly(scope_and_run)(.x))
 
   }
 
-  print_strings <- print_strings %>%
-    str_subset("[^\\s]+") %>%
-      str_replace_all("\n", "<br>") %>%
-      txt_tocode()
+
+  new_demo_code[is_src] <- new_demo_code[is_src] %>%
+    unlist() %>%
+    str_replace_all(fixed("\n"), "<br>")
+
 
   attributes(new_demo_code) <- NULL
 
+  if (!shatter) {
+
+    .code_string <- str_replace_all(.code_string, fixed("\n"), "<br>")
+
+    new_demo_code <- c(.code_string,
+                       new_demo_code[!is_src])
+
+    attr(new_demo_code, "where_sources") <- 1
+
+  } else {
+
+
+    attr(new_demo_code, "where_sources") <- which(is_src)
+
+  }
+
+
   attr(new_demo_code, "class") <- "demo_code"
 
-  attr(new_demo_code, "print_string") <- print_strings
-
-  attr(new_demo_code, "orig_sources") <- good_srcs
-
   attr(new_demo_code, "origin") <- "direct-string"
+
+  attr(new_demo_code, "eval") <- eval
 
 
   return(new_demo_code)
@@ -86,23 +94,30 @@ demo_code <- function(.code_string, eval_here = TRUE, shatter = TRUE) {
 
 #' S3 method for knitting a \code{demo_code} object
 #'
+#' @importFrom purrr map
+#'
 #' @export
 knit_print.demo_code <- function(x, ...) {
 
   demo_eval = knitr::opts_current$get('demo.eval')
 
-  if (length(x) > 0 && demo_eval) {
+  where_sources <- attr(x, "where_sources")
 
-    output_string <- purrr::map(x, function(val) knitr:::wrap(val, ...)) %>%
-      str_c(collapse = " ")
+  x[-where_sources] <- purrr::map(x[-where_sources], function(val) knitr:::wrap(val, ...))
 
-    knitr::asis_output(paste(attr(x, "print_string"), output_string))
+  x[where_sources] <- purrr::map(x[where_sources], function(val) wrap_source(val, ...))
 
-   } else {
+  x %>%
+      str_c(collapse = " ") %>%
+      knitr::asis_output()
 
-     knitr::asis_output(attr(x, "print_string"))
+}
 
-   }
+#' Helper for \code{knit_print.demo_code}
+wrap_source <- function(x, ...) {
+
+  attr(x, "class") <- "source"
+  knitr:::wrap(x, ...)
 
 }
 
@@ -117,13 +132,14 @@ print.demo_code <- function(x, ...) {
 
   # if code is being supplied as an input object, run things, with objects defined in global environment
 
-  # if (stringr::str_detect(attr(x, "origin"), "direct")) {
+  # if (stringr::str_detect(attr(x, "origin"), "direct") && attr(x, "eval")) {
   #
-  #   map(attr(x, "orig_sources"), ~print(eval(parse(text = .x))))
+  #   is_src <- purrr::map(x, class) == "source"
+  #   x[is_src]
   #
   # }
 
- # x
+  #print(x)
 
 }
 

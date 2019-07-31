@@ -4,7 +4,7 @@
 \alias{demo_code}
 \title{Creates an object of the class \code{demo_code}}
 \usage{
-demo_code(.code_string, eval_here = TRUE)
+demo_code(.code_string, eval = TRUE, shatter = TRUE)
 }
 \arguments{
 \item{.code_string}{A string containing executable R code OR a valid expression that will be converted to a string via \code{deparse()}}

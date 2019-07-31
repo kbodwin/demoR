@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Kelly Bodwin" />
@@ -159,18 +160,6 @@ summary {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
@@ -197,21 +186,37 @@ $(document).ready(function () {
 </div>
 
 
-<pre class="r"><code>bob &lt;- demo_code({
-  ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
-    geom_point()
-}) %&gt;%
-  hlt_args(color = &quot;green&quot;) %&gt;%
-  hlt_funs(color = &quot;blue&quot;) %&gt;%
-  hlt_input_vals(color = &quot;red&quot;) %&gt;%
-  hlt_regexp(&quot;Sepal.Length&quot;)</code></pre>
-<pre class="r"><code>demo_code(foo &lt;- mean(1:10)) %&gt;% hlt_input_vals(color = &quot;red&quot;)</code></pre>
-<pre class="prettyprint"><code>foo &lt;- mean(<span style="color:red">1:10</span>)</code></pre>
-<pre class="r"><code>foo + 5</code></pre>
-<pre><code>## [1] 10.5</code></pre>
-<pre class="r"><code>demo_code(foo + 7) %&gt;% hlt_all()</code></pre>
-<pre class="prettyprint"><code><span style="background-color:#ffff7f">foo + 7</span></code></pre>
-<pre><code>## [1] 12.5</code></pre>
+<pre class="r"><code>demo_code('mean(1:10)') %&gt;% hlt_funs()</code></pre>
+<pre><code>## Warning in stri_c(..., sep = sep, collapse = collapse, ignore_null = TRUE):
+## argument is not an atomic vector; coercing</code></pre>
+<pre class="prettyprint"><code><span style="background-color:#ffff7f">mean</span>(1:10)</code></pre>
+<p>list(“<code>r\nmean(1:10)\n</code>”, “<code>\n## [1] 5.5\n</code>”) character(0) character(0)</p>
+<pre class="r"><code>demo_chunk(&quot;plot1&quot;)</code></pre>
+<pre><code>## $result
+## [1] &quot;plot(1:10) &quot;
+## attr(,&quot;chunk_opts&quot;)
+## attr(,&quot;chunk_opts&quot;)$label
+## [1] &quot;plot1&quot;
+## 
+## attr(,&quot;chunk_opts&quot;)$include
+## [1] FALSE
+## 
+## 
+## $error
+## NULL</code></pre>
+<pre class="r"><code>demo_chunk(&quot;plot1&quot;)</code></pre>
+<pre><code>## $result
+## [1] &quot;plot(1:10) &quot;
+## attr(,&quot;chunk_opts&quot;)
+## attr(,&quot;chunk_opts&quot;)$label
+## [1] &quot;plot1&quot;
+## 
+## attr(,&quot;chunk_opts&quot;)$include
+## [1] FALSE
+## 
+## 
+## $error
+## NULL</code></pre>
 
 
 
@@ -230,6 +235,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

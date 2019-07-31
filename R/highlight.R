@@ -37,11 +37,16 @@ hlt_regexp <- function(.string, pattern, code = TRUE, ...)  {
 #'
 #' @return An object of class \code{\link{demo_code}}.
 #'
+#' @importFrom purrr map
+#'
 #' @export
 hlt_regexp.demo_code = function(x, ...) {
 
-  code_string <- attr(x, "print_string")
-  attr(x, "print_string") <- hlt_regexp(code_string, ...)
+  where_sources <- attr(x, "where_sources")
+
+  source_strings <- purrr::map(x[where_sources], function(cs) hlt_regexp(cs, ...))
+
+  x[where_sources] <- source_strings
 
   return(x)
 
@@ -75,9 +80,9 @@ hlt_regexp.default <- function(.string, pattern, code = TRUE, ...) {
     str_c(collapse = "")
 
   # wrap in code tags if needed
-  if (code && !str_detect(.string, fixed("<code>"))) {
-    .string <- txt_tocode(.string)
-  }
+  # if (code && !str_detect(.string, fixed("<code>"))) {
+  #   .string <- txt_tocode(.string)
+  # }
 
   return(.string)
 }
