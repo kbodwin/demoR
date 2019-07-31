@@ -118,7 +118,6 @@ knit_print.demo_code <- function(x, ...) {
 wrap_source <- function(x, ...) {
 
   txt_tocode(x)
-  #knitr::knit_hooks$get("source")(x, ...)
 
 }
 
