@@ -45,16 +45,14 @@ demo_code <- function(.code_string, eval = TRUE, shatter = TRUE) {
 
   is_src <- map(new_demo_code, class) == "source"
 
-
   # Scope and run it
 
   if (eval) {
 
     map(new_demo_code[is_src],
-          ~quietly(scope_and_run)(.x))
+        ~quietly(scope_and_run)(.x))
 
   }
-
 
   new_demo_code[is_src] <- new_demo_code[is_src] %>%
     unlist() %>%
@@ -132,12 +130,13 @@ print.demo_code <- function(x, ...) {
 
   # if code is being supplied as an input object, run things, with objects defined in global environment
 
-  # if (stringr::str_detect(attr(x, "origin"), "direct") && attr(x, "eval")) {
-  #
-  #   is_src <- purrr::map(x, class) == "source"
-  #   x[is_src]
-  #
-  # }
+  if (attr(x, "eval")) {
+
+    where_sources <- attr(x, "where_sources")
+
+    purrr::map(x[-where_sources], print)
+
+  }
 
   #print(x)
 
