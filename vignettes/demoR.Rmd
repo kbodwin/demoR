@@ -54,9 +54,9 @@ The core element of the `demoR` package is an object of the class `demo_code`.  
 
 ### Demoing from a code chunk
 
-The cleanest way to make a `demo_code` object is through code chunk options in R Markdown.  Simply set the chunk option `demo` to be a string containing a label for the set of code you intend to demo.
+The cleanest way to make a `demo_code` object is by referencing a named code chunk in R Markdown.
 
-```{r, demo = "how_to_pipe", include = FALSE}
+```{r how_to_pipe, include = FALSE}
 
 iris %>%
   group_by(Species) %>%
@@ -68,7 +68,7 @@ For example:
 
 ````
 
-```{r, include = FALSE, demo = "how_to_pipe"}`r ''`
+```{r how_to_pipe, include = FALSE, demo = "how_to_pipe"}`r ''`
 
 iris %>%
   group_by(Species) %>%
@@ -79,7 +79,7 @@ iris %>%
 ````
 
 
-Then, you can reference the object by label to automatically create a `demo_code` object using `create_demo()`.  Here we pass the object to `hlt_fixed()` to show our source code with the pipe operators highlighted in yellow.
+You can use the chunk label to automatically create a `demo_code` object using `create_demo()`.  Here we pass the object to `hlt_fixed()` to show our source code with the pipe operators highlighted in yellow.
 
 ````
 
