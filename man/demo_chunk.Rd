@@ -7,7 +7,7 @@
 demo_chunk(label)
 }
 \arguments{
-\item{label}{String that gives the name of the label used in a chunk option.}
+\item{label}{String that gives the name of the label used in a chunk option. If left blank, current chunk is used.}
 }
 \value{
 An object of class \code{\link{demo_code}}
