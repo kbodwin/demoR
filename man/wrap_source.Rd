@@ -4,7 +4,7 @@
 \alias{wrap_source}
 \title{Helper for \code{knit_print.demo_code}}
 \usage{
-wrap_source(x, ...)
+wrap_source(x, doc_type, ...)
 }
 \description{
 Helper for \code{knit_print.demo_code}

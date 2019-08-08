@@ -84,7 +84,17 @@ demo_code <- function(.code_string, eval = TRUE, shatter = TRUE) {
 
   attr(new_demo_code, "eval") <- eval
 
-  attr(new_demo_code, "doc_type") <- rmarkdown::all_output_formats(knitr::current_input())
+  get_doc_type <- purrr::safely(rmarkdown::all_output_formats)(knitr::current_input())
+
+  if (!is.null(get_doc_type$error)) {
+
+    attr(new_demo_code, "doc_type") <- "active_source"
+
+  } else {
+
+    attr(new_demo_code, "doc_type") <- get_doc_type$result
+
+  }
 
   return(new_demo_code)
 
@@ -125,7 +135,11 @@ wrap_source <- function(x, doc_type, ...) {
 
     x <- paste0("<pre class='prettyprint lang-r'>", txt_tocode(x), "</pre>")
 
-  } else {
+  # } else if (doc_type == "moonreader_presentation") {
+  #
+  #   x <- paste0("<code class ='r hljs remark-code>", txt_tocode(x), "</code>")
+  #
+    } else {
 
     x <- paste0("<pre><code class='language-r'>", txt_tocode(x), "</code></pre>")
 
@@ -151,7 +165,7 @@ print.demo_code <- function(x, ...) {
 
   # if code is being supplied as an input object, run things, with objects defined in global environment
 
-  if (attr(x, "eval") && !isTRUE(knitr::getOption('knitr.in.progress'))) {
+  if (attr(x, "eval") && !isTRUE(getOption('knitr.in.progress'))) {
 
     where_sources <- attr(x, "where_sources")
 

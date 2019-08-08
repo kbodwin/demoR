@@ -16,7 +16,7 @@ An object of class \code{\link{demo_code}}
 This function reads the source code from a given code chunk that has the value \code{label} set to the \code{demo} option; i.e., \code{{r, demo = "my_label"}}.
 }
 \details{
-When run directly in a source file, \code{demo_chunk()} reads the text of the active file and extracts the relevant string of source code from the labelled chunk.  (Important: this only works in RStudio!)
+When run directly in a source file, \code{demo_chunk()} reads the text of the active file and extracts the relevant string of source code from the labelled chunk.  (Important: this only works in RStudio.)
 
 When run during the \code{knitr::knit()} process, \code{demo_chunk()} pulls the relevant chunk source during \code{knitr::knit_hooks$set("source").}
 }
