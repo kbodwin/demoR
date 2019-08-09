@@ -135,20 +135,15 @@ wrap_source <- function(x, doc_type, ...) {
 
     x <- paste0("<pre class='prettyprint lang-r'>", txt_tocode(x), "</pre>")
 
-  # } else if (doc_type == "moonreader_presentation") {
-  #
-  #   x <- paste0("<code class ='r hljs remark-code>", txt_tocode(x), "</code>")
-  #
+  } else if (doc_type == "xaringan::moon_reader") {
+
+    x <- paste0("<code class ='r hljs remark-code'>", x, "</code>")
+
     } else {
 
     x <- paste0("<pre><code class='language-r'>", txt_tocode(x), "</code></pre>")
 
   }
-  # } else if (doc_type == "xaringan::moon_reader"){
-  #
-  #   x <- paste0("<pre><code class='language-r'>", x, "</code></pre>")
-  #
-  # }
 
   return(x)
 
