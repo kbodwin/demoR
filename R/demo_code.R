@@ -139,11 +139,19 @@ wrap_source <- function(x, doc_type, ...) {
 
     x <- paste0("<code class ='r hljs remark-code'>", x, "</code>")
 
+    } else if (doc_type == "slidy_presentation") {
+
+      x <- paste0("<pre class='sourceCode r'><code class='sourceCode r'>", x, "</code></pre>")
+
+    # } else if (doc_type == "revealjs::revealjs_presentation") {
+    #
+    #   x <-
+
     } else {
 
-    x <- paste0("<pre><code class='language-r'>", txt_tocode(x), "</code></pre>")
+      x <- paste0("<pre><code class='language-r'>", txt_tocode(x), "</code></pre>")
 
-  }
+    }
 
   return(x)
 
