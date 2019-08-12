@@ -114,6 +114,12 @@ knit_print.demo_code <- function(x, ...) {
 
   x[where_sources] <- purrr::map(x[where_sources], function(val) wrap_source(val, attr(x, "doc_type"), ...))
 
+  if (!eval) {
+
+    x <- x[where_sources]
+
+  }
+
   x <- x %>%
       str_c(collapse = " ")
 
