@@ -99,7 +99,7 @@ hlt_quick <- function(.string, pattern, ...){
 #' @export
 hlt_all <- function(.string, ...) {
 
-  hlt.regexp(.string, ".*", ...)
+  hlt_regexp(.string, ".*", ...)
 
 }
 
