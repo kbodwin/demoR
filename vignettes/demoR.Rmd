@@ -68,7 +68,7 @@ For example:
 
 ````
 
-```{r how_to_pipe, include = FALSE, demo = "how_to_pipe"}`r ''`
+```{r how_to_pipe, include = FALSE}`r ''`
 
 iris %>%
   group_by(Species) %>%
