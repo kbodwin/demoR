@@ -4,3 +4,5 @@
 ^old_R
 ^LICENSE\.md$
 ^dev$
+^doc$
+^Meta$
