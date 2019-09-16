@@ -3,7 +3,7 @@
 #' \code{demo_code} objects are evaluated R code, returned from \code{evaluate::evaluate}, with an attached attribute called \code{print_string} which sets up fancy formatting for knitting.
 #'
 #' @param .code_string A string containing executable R code OR a valid expression that will be converted to a string via \code{deparse()}
-#' @param eval_here A boolean specifying whether the code should be immediately evaluated, in addition to creating the \code{demo_code} object. (Defaults to \code{TRUE})
+#' @param eval A boolean specifying whether the code should be immediately evaluated, in addition to creating the \code{demo_code} object. (Defaults to \code{TRUE})
 #'
 #' @return A \code{demo_code} object.
 #'
@@ -185,7 +185,3 @@ print.demo_code <- function(x, ...) {
   #print(x)
 
 }
-
-#' For pkgdown
-#' @export
-replay_html.demo_code <- function(x, ...) ""

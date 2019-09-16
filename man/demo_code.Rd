@@ -9,7 +9,7 @@ demo_code(.code_string, eval = TRUE, shatter = TRUE)
 \arguments{
 \item{.code_string}{A string containing executable R code OR a valid expression that will be converted to a string via \code{deparse()}}
 
-\item{eval_here}{A boolean specifying whether the code should be immediately evaluated, in addition to creating the \code{demo_code} object. (Defaults to \code{TRUE})}
+\item{eval}{A boolean specifying whether the code should be immediately evaluated, in addition to creating the \code{demo_code} object. (Defaults to \code{TRUE})}
 }
 \value{
 A \code{demo_code} object.
