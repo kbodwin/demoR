@@ -2,17 +2,13 @@
 #'
 #' The demoR package provides ...
 #'
-#' @section Hightlight functions
+#' @section Highlight functions
 #'
-#' The \code{hlt_*} functions add text display formatting to printed code,
+#' The \code{hlt_*} functions add formatting to printed code.
 #'
 #' @section Demo functions
 #'
 #' The \code{demo_*} functions print and run the code.
-#'
-#' @section Teaching/Your turn
-#'
-#' The bridge things
 #'
 #' @docType package
 #' @name demoR

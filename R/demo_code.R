@@ -167,7 +167,7 @@ wrap_source <- function(x, doc_type, ...) {
 #'
 #' Prints nothing; \code{demo_code} objects should be seen and not heard.
 #'
-#' If the \code{demo_code} object was created by inputting a string, we should run that code and print any output.s
+#' If the \code{demo_code} object was created by inputting a string, we should run that code and print any output.
 #'
 #' @export
 print.demo_code <- function(x, ...) {

@@ -10,5 +10,5 @@
 Prints nothing; \code{demo_code} objects should be seen and not heard.
 }
 \details{
-If the \code{demo_code} object was created by inputting a string, we should run that code and print any output.s
+If the \code{demo_code} object was created by inputting a string, we should run that code and print any output.
 }

@@ -59,7 +59,12 @@ demo_chunk <- function(label) {
 #'
 #' Raw editor text has been taken from an active RStudio session via \code{rstudioapi::getSourceEditorContext()}.  Chunk delimiters and html is removed, all formatting is otherwise perserved.
 #'
+#' @param .contents
+#'
+#' @return chunk text
+#'
 #' @importFrom stringr str_c str_which str_trim
+#'
 code_from_editor <- function(.contents, label) {
 
 
@@ -92,4 +97,3 @@ code_from_editor <- function(.contents, label) {
   return(chunk_text)
 
 }
-
