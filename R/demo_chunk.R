@@ -17,7 +17,7 @@ demo_chunk <- function(label) {
 
     sources = NULL
 
-    try_chunk <- purrr::safely(knitr:::knit_code$get)(label)
+    try_chunk <- purrr::safely(knitr::knit_code$get)(label)
 
     if (is.null(try_chunk$error) && !is.null(try_chunk$result)) {
 
