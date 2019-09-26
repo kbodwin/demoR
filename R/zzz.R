@@ -1,4 +1,4 @@
-#' Sets hook options upon library load
+# Sets hook options upon library load
 
 .onLoad <- function(libname, pkgname) {
 
