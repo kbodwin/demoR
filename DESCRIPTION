@@ -16,6 +16,7 @@ Description: demoR facilitates easier formatting of R
     code, such as highlighting of particular syntatical elements.
 License: MIT + file LICENSE
 URL: https://github.com/kbodwin/demoR
+BugReports: https://github.com/kbodwin/demoR/issues
 Imports:
     diffobj,
     ggplot2,
