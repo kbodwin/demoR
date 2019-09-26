@@ -19,6 +19,7 @@ URL: https://github.com/kbodwin/demoR
 BugReports: https://github.com/kbodwin/demoR/issues
 Imports:
     diffobj,
+    evaluate,
     ggplot2,
     glue,
     knitr,

@@ -13,5 +13,7 @@ scope_and_run(.code_string)
 Nothing; side effects in environment only.
 }
 \description{
-Shortcut function to rescope a code string and then run (but not print).  Looks for object assignments of the form \code{foo <-} and rescopes to \code{foo <<-}, then evaluates code string.
+Shortcut function to rescope a code string and then run (but not print).
+Looks for object assignments of the form \code{foo <-} and rescopes to
+\code{foo <<-}, then evaluates code string.
 }
