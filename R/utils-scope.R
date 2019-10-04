@@ -30,7 +30,9 @@ scope_run_print <- function(.code_string) {
 
 #' Runs code from string, in parent environment
 #'
-#' Shortcut function to rescope a code string and then run (but not print).  Looks for object assignments of the form \code{foo <-} and rescopes to \code{foo <<-}, then evaluates code string.
+#' Shortcut function to rescope a code string and then run (but not print).
+#' Looks for object assignments of the form \code{foo <-} and rescopes to
+#' \code{foo <<-}, then evaluates code string.
 #'
 #' @param .code_string A string containing runnable R code.
 #'

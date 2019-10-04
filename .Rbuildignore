@@ -6,3 +6,5 @@
 ^dev$
 ^doc$
 ^Meta$
+docs/
+^README\.Rmd$
