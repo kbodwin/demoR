@@ -17,7 +17,9 @@ vignette: >
 
 ```{r setup, message = FALSE, warning = FALSE}
 library(demoR)
-library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(stringr)
 ```
 
 ## Introduction

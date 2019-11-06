@@ -27,6 +27,7 @@ Imports:
     purrr,
     stringr
 Suggests: 
+    dplyr,
     learnr,
     rmarkdown,
     rstudioapi,
